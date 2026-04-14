@@ -54,11 +54,12 @@ Startup command pattern:
 Provide these via Codespaces secrets:
 
 - `CHECKPOINT_MGMT_HOST`
-- `CHECKPOINT_USERNAME`
-- `CHECKPOINT_PASSWORD`
+- `CHECKPOINT_API_KEY` (optional; preferred when available)
+- `CHECKPOINT_USERNAME` (used when `CHECKPOINT_API_KEY` is blank)
+- `CHECKPOINT_PASSWORD` (used when `CHECKPOINT_API_KEY` is blank)
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
-- `OPENCODE_SERVER_PASSWORD`
+- `OPENCODE_SERVER_PASSWORD` (defaults to `demo123` during guided setup)
 
 Never place real secrets in tracked files.
 
@@ -69,11 +70,12 @@ On start, `scripts/first-run-checkpoint-setup.sh`:
 1. loads values from environment and prior user-scoped setup
 2. detects missing mandatory values
 3. prompts interactively when possible
-4. defaults username suggestion to `admin`
-5. suggests temporary lab/demo password `demo123` only when password input is blank
-6. writes user-scoped runtime values under `~/.config/opencode/checkpoint-secrets.env`
-7. updates global OpenCode config (`~/.config/opencode/opencode.json`) without duplicating MCP entries
-8. prints a **redacted** setup summary
+4. asks for a Check Point API key first; when left blank it falls back to username/password
+5. defaults username suggestion to `admin`
+6. defaults both the Check Point password and OpenCode password to `demo123` when left blank
+7. writes user-scoped runtime values under `~/.config/opencode/checkpoint-secrets.env`
+8. updates global OpenCode config (`~/.config/opencode/opencode.json`) without duplicating MCP entries
+9. prints a **redacted** setup summary
 
 If startup is non-interactive and values are missing, run manually:
 

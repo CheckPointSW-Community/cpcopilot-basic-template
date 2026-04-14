@@ -8,6 +8,7 @@
       "environment": {
         "MANAGEMENT_HOST": "{env:CHECKPOINT_MGMT_HOST}",
         "MANAGEMENT_PORT": "{env:CHECKPOINT_MGMT_PORT}",
+        "API_KEY": "{env:CHECKPOINT_API_KEY}",
         "USERNAME": "{env:CHECKPOINT_USERNAME}",
         "PASSWORD": "{env:CHECKPOINT_PASSWORD}"
       }
@@ -19,6 +20,7 @@
       "environment": {
         "MANAGEMENT_HOST": "{env:CHECKPOINT_MGMT_HOST}",
         "MANAGEMENT_PORT": "{env:CHECKPOINT_MGMT_PORT}",
+        "API_KEY": "{env:CHECKPOINT_API_KEY}",
         "USERNAME": "{env:CHECKPOINT_USERNAME}",
         "PASSWORD": "{env:CHECKPOINT_PASSWORD}"
       }
@@ -30,6 +32,7 @@
       "environment": {
         "MANAGEMENT_HOST": "{env:CHECKPOINT_MGMT_HOST}",
         "MANAGEMENT_PORT": "{env:CHECKPOINT_MGMT_PORT}",
+        "API_KEY": "{env:CHECKPOINT_API_KEY}",
         "USERNAME": "{env:CHECKPOINT_USERNAME}",
         "PASSWORD": "{env:CHECKPOINT_PASSWORD}"
       }
@@ -41,6 +44,7 @@
       "environment": {
         "MANAGEMENT_HOST": "{env:CHECKPOINT_MGMT_HOST}",
         "MANAGEMENT_PORT": "{env:CHECKPOINT_MGMT_PORT}",
+        "API_KEY": "{env:CHECKPOINT_API_KEY}",
         "USERNAME": "{env:CHECKPOINT_USERNAME}",
         "PASSWORD": "{env:CHECKPOINT_PASSWORD}"
       }

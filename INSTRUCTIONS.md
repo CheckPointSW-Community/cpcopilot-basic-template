@@ -15,11 +15,12 @@ Welcome to the Check Point-focused OpenCode Codespace.
 Set these as GitHub Codespaces secrets for the repository or your account:
 
 - `CHECKPOINT_MGMT_HOST`
-- `CHECKPOINT_USERNAME`
-- `CHECKPOINT_PASSWORD`
+- `CHECKPOINT_API_KEY` (optional; preferred when available)
+- `CHECKPOINT_USERNAME` (used if `CHECKPOINT_API_KEY` is blank)
+- `CHECKPOINT_PASSWORD` (used if `CHECKPOINT_API_KEY` is blank; defaults to `demo123` during guided setup)
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
-- `OPENCODE_SERVER_PASSWORD` (optional but recommended)
+- `OPENCODE_SERVER_PASSWORD` (defaults to `demo123` during guided setup)
 
 ## What this environment is optimized for
 
@@ -59,6 +60,7 @@ Important:
 
 - A best-effort intro session is seeded automatically with the prompt `Tell me about yourself` after OpenCode starts.
 - There is currently no officially documented OpenCode setting for forcing the Web UI right file panel closed by default, so this template does **not** apply a brittle UI-state hack for that.
+- Guided setup asks for a Check Point API key first. If you leave it blank, the flow falls back to username/password with defaults of `admin` / `demo123`.
 
 ## Important behavior expectations
 

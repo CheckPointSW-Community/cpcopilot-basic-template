@@ -22,11 +22,12 @@ When a Codespace starts from this template, it:
 Set these in your repository/user Codespaces secrets before creating a Codespace:
 
 - `CHECKPOINT_MGMT_HOST`
-- `CHECKPOINT_USERNAME`
-- `CHECKPOINT_PASSWORD`
+- `CHECKPOINT_API_KEY` (optional; preferred when available)
+- `CHECKPOINT_USERNAME` (used when `CHECKPOINT_API_KEY` is blank)
+- `CHECKPOINT_PASSWORD` (used when `CHECKPOINT_API_KEY` is blank)
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
-- `OPENCODE_SERVER_PASSWORD`
+- `OPENCODE_SERVER_PASSWORD` (defaults to `demo123` during guided setup)
 
 Optional:
 
@@ -37,6 +38,8 @@ Optional:
 - `REPORTS_PORT` (default `8081`)
 
 A non-secret template is provided in `.env.example`.
+
+Guided setup asks for a Check Point API key first. If you leave it blank, the setup falls back to username/password with defaults of `admin` / `demo123`. The OpenCode web password also defaults to `demo123` when left blank.
 
 ## MCP servers preconfigured
 

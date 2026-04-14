@@ -12,6 +12,9 @@
     "CHECKPOINT_MGMT_HOST": {
       "description": "Check Point management DNS name or IP"
     },
+    "CHECKPOINT_API_KEY": {
+      "description": "Optional Check Point management API key; if blank the setup falls back to username/password"
+    },
     "CHECKPOINT_USERNAME": {
       "description": "Check Point management username"
     },
@@ -25,7 +28,7 @@
       "description": "Secret key for the Check Point documentation MCP"
     },
     "OPENCODE_SERVER_PASSWORD": {
-      "description": "Optional basic-auth password for OpenCode web mode"
+      "description": "Basic-auth password for OpenCode web mode (defaults to demo123 if left blank during setup)"
     }
   },
   "portsAttributes": {
