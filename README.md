@@ -12,7 +12,7 @@ When a Codespace starts from this template, it:
 - forwards the OpenCode web port and report server port
 - provisions a global `checkpoint-copilot` OpenCode skill
 - runs first-run setup for required secrets (with interactive prompts when possible)
-- shows a terminal welcome/instructions flow when you open the console
+- shows a terminal welcome/instructions flow when you open the first visible bash terminal
 - validates setup and prints a redacted summary
 
 ## Required Codespaces secrets
@@ -49,12 +49,13 @@ Based on the official Check Point MCP packages:
 ## Runtime flow
 
 - `postCreateCommand` runs `scripts/setup-opencode.sh` and quick validation.
-- `postStartCommand` runs `scripts/post-start.sh` which:
+- `postCreateCommand` runs `scripts/setup-opencode.sh`.
+- `postStartCommand` runs `scripts/post-start.sh` for lightweight background preparation only.
+- The first visible bash terminal runs `scripts/terminal-welcome.sh` through a shell hook, and that visible terminal flow:
   1. runs first-run setup (`scripts/first-run-checkpoint-setup.sh`)
-  2. starts OpenCode web (`scripts/start-opencode-web.sh`)
-  3. starts report server (`scripts/start-report-server.sh`)
+  2. starts the reports server (`scripts/start-report-server.sh`)
+  3. starts OpenCode web (`scripts/start-opencode-web.sh`)
   4. runs quick validation (`scripts/validate-environment.sh --quick`)
-- `postAttachCommand` runs `scripts/post-attach.sh` which prints terminal instructions and triggers interactive setup if required.
 
 If secrets are missing and startup is non-interactive, setup remains pending and you can complete it manually:
 

@@ -6,7 +6,7 @@
   "remoteUser": "node",
   "userEnvProbe": "interactiveShell",
   "updateRemoteUserUID": true,
-  "waitFor": "postStartCommand",
+  "waitFor": "postCreateCommand",
   "forwardPorts": [4096, 8081],
   "secrets": {
     "CHECKPOINT_MGMT_HOST": {
@@ -42,7 +42,6 @@
   },
   "postCreateCommand": "bash -i -c '${containerWorkspaceFolder}/scripts/setup-opencode.sh'",
   "postStartCommand": "bash -i -c '${containerWorkspaceFolder}/scripts/post-start.sh'",
-  "postAttachCommand": "bash -i -c '${containerWorkspaceFolder}/scripts/post-attach.sh'",
   "customizations": {
     "vscode": {
       "settings": {

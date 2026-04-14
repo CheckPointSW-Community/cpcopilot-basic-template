@@ -4,10 +4,11 @@ Welcome to the Check Point-focused OpenCode Codespace.
 
 ## What to do first
 
-1. Open the forwarded **OpenCode Web UI** port: `4096`
-2. Open the forwarded **HTML Reports** port: `8081`
-3. If setup is marked **pending**, complete the guided setup in the terminal:
-   - `bash scripts/first-run-checkpoint-setup.sh`
+1. Open the first visible bash terminal in the Codespace.
+2. Complete the guided setup shown in that terminal if prompted.
+3. After setup finishes, OpenCode and the reports server are started for you.
+4. Open the forwarded **OpenCode Web UI** port: `4096`
+5. Open the forwarded **HTML Reports** port: `8081`
 
 ## Required secrets
 
@@ -44,7 +45,7 @@ Use this Codespace primarily for:
 - Guided setup: `bash scripts/first-run-checkpoint-setup.sh`
 - Start OpenCode: `bash scripts/start-opencode-web.sh`
 - Start reports server: `bash scripts/start-report-server.sh`
-- Re-run welcome flow: `bash scripts/post-attach.sh`
+- Re-run welcome flow: `bash scripts/terminal-welcome.sh`
 - Validate environment: `bash scripts/validate-environment.sh`
 
 ## Success checklist

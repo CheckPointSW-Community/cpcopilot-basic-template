@@ -112,10 +112,10 @@ else
   fail "report server startup not configured"
 fi
 
-if grep -q "post-attach.sh" "${REPO_ROOT}/.devcontainer/devcontainer.json" 2>/dev/null; then
-  pass "terminal attach guidance is configured"
+if grep -q "checkpoint-shell-hook.sh" "${REPO_ROOT}/scripts/setup-opencode.sh" 2>/dev/null; then
+  pass "foreground terminal guidance is configured"
 else
-  fail "terminal attach guidance is not configured"
+  fail "foreground terminal guidance is not configured"
 fi
 
 if grep -q "opencode web" "${REPO_ROOT}/scripts/start-opencode-web.sh" 2>/dev/null; then
