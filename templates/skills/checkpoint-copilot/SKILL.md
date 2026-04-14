@@ -71,7 +71,11 @@ When asked for a report, or when a report materially improves understanding:
   - recommendations / next steps
 - Keep reports readable and suitable for internal sharing.
 - Never include raw credentials, API keys, or secrets.
-- Return the local path/URL to the generated report.
+- Return all of the following when a report is created:
+  - the local path (for example `reports/example-report.html`)
+  - the hosted report URL using `REPORTS_PORT` if available, otherwise defaulting to `8081`
+  - the hosted reports index URL (`http://localhost:<REPORTS_PORT>/`)
+- When practical, also include the hosted report URL and index URL inside the report itself.
 
 ## Out-of-scope handling
 

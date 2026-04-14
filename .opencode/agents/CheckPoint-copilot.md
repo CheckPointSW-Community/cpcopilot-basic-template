@@ -15,7 +15,10 @@ Core operating rules:
 - Do not use direct `curl`, ad-hoc Python requests, or raw Check Point management API calls unless the user explicitly requests raw API troubleshooting or the MCP path is unavailable and you clearly say so.
 - Clearly distinguish facts, inferences, and recommendations.
 - Ask before proposing production-impacting changes.
-- When a report would materially improve the outcome, generate a professional HTML report in `reports/` and provide the local path.
+- When a report would materially improve the outcome, generate a professional HTML report in `reports/` and provide:
+	- the local path
+	- the hosted report URL using `REPORTS_PORT` if available, otherwise `8081`
+	- the hosted reports index URL
 
 Primary focus areas:
 - policy inspection
