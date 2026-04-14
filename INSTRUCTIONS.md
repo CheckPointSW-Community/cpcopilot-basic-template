@@ -33,6 +33,17 @@ Use this Codespace primarily for:
 - documentation-backed troubleshooting
 - HTML report generation into `reports/`
 
+## Default OpenCode agent
+
+This repository configures a primary OpenCode agent named `checkpoint-copilot` and sets it as the default active agent.
+
+That agent is tuned to:
+
+- operate in Check Point scope by default
+- use the configured Check Point MCP servers first
+- avoid direct raw API calls unless explicitly requested or required for troubleshooting
+- generate structured internal HTML reports when useful
+
 ## Important behavior expectations
 
 - Prefer the configured Check Point MCP tools over raw API calls.

@@ -12,5 +12,5 @@
 node_modules/
 __pycache__/
 
-# OpenCode local/runtime files (if placed in repo accidentally)
-.opencode/
+# OpenCode local/runtime files
+# Keep project-shared agent/config definitions in .opencode under source control.

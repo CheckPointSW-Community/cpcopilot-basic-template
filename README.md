@@ -11,6 +11,7 @@ When a Codespace starts from this template, it:
 - runs OpenCode in web mode
 - forwards the OpenCode web port and report server port
 - provisions a global `checkpoint-copilot` OpenCode skill
+- sets a `checkpoint-copilot` primary OpenCode agent as the default active agent
 - runs first-run setup for required secrets (with interactive prompts when possible)
 - shows a terminal welcome/instructions flow when you open the first visible bash terminal
 - validates setup and prints a redacted summary
@@ -56,6 +57,7 @@ Based on the official Check Point MCP packages:
   2. starts the reports server (`scripts/start-report-server.sh`)
   3. starts OpenCode web (`scripts/start-opencode-web.sh`)
   4. runs quick validation (`scripts/validate-environment.sh --quick`)
+- On later Codespace restarts/resumes, `postStartCommand` automatically starts OpenCode and the reports server again if setup had already completed.
 
 If secrets are missing and startup is non-interactive, setup remains pending and you can complete it manually:
 
