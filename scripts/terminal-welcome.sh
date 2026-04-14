@@ -62,8 +62,8 @@ else
 fi
 
 echo "[welcome] Starting local services..."
-bash "${REPO_ROOT}/scripts/start-report-server.sh" || true
 bash "${REPO_ROOT}/scripts/start-opencode-web.sh" || true
+bash "${REPO_ROOT}/scripts/start-report-server.sh" || true
 bash "${REPO_ROOT}/scripts/validate-environment.sh" --quick || true
 
 echo ""

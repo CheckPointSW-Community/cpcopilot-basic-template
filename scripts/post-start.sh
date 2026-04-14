@@ -21,8 +21,8 @@ if [[ -f "${STATUS_FILE}" ]] && command -v jq >/dev/null 2>&1; then
 fi
 
 if [[ "${SETUP_COMPLETE}" == "true" ]]; then
-	bash "${REPO_ROOT}/scripts/start-report-server.sh" || true
 	bash "${REPO_ROOT}/scripts/start-opencode-web.sh" || true
+	bash "${REPO_ROOT}/scripts/start-report-server.sh" || true
 fi
 
 exit 0

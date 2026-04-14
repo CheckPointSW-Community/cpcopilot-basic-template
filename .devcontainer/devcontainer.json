@@ -36,7 +36,7 @@
     },
     "8081": {
       "label": "Check Point HTML Reports",
-      "onAutoForward": "notify",
+      "onAutoForward": "silent",
       "visibility": "private"
     }
   },
