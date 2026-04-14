@@ -34,9 +34,10 @@ if [[ -f "${PID_FILE}" ]] && kill -0 "$(cat "${PID_FILE}")" 2>/dev/null; then
 fi
 
 cd "${REPO_ROOT}"
-bash "${REPO_ROOT}/scripts/seed-opencode-session.sh" --bootstrap || true
-nohup opencode web --hostname 0.0.0.0 --port "${OPENCODE_PORT}" </dev/null >"${LOG_FILE}" 2>&1 &
+nohup env -C "${REPO_ROOT}" opencode web --hostname 0.0.0.0 --port "${OPENCODE_PORT}" </dev/null >"${LOG_FILE}" 2>&1 &
 echo $! > "${PID_FILE}"
+
+bash "${REPO_ROOT}/scripts/seed-opencode-session.sh" || true
 
 echo "[opencode] web mode started on 0.0.0.0:${OPENCODE_PORT}."
 echo "[opencode] local URL: http://localhost:${OPENCODE_PORT}"

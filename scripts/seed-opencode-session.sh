@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 USER_ENV_FILE="${HOME}/.config/opencode/checkpoint-secrets.env"
 STATE_DIR="${HOME}/.local/state/checkpoint-copilot"
 SEED_STATE_FILE="${STATE_DIR}/opencode-intro-seeded"
-SEED_LOG_FILE="${STATE_DIR}/opencode-seed.log"
 
 mkdir -p "${STATE_DIR}"
 
@@ -22,19 +19,9 @@ OPENCODE_SERVER_USERNAME="${OPENCODE_SERVER_USERNAME:-opencode}"
 OPENCODE_SERVER_PASSWORD="${OPENCODE_SERVER_PASSWORD:-}"
 SEED_TITLE="Check Point CoPilot Intro"
 SEED_PROMPT="Tell me about yourself"
-BOOTSTRAP_MODE="${1:-}"
-TEMP_PID=""
 SERVER_PORT="${OPENCODE_PORT}"
 
 export PATH="${HOME}/.local/npm-global/bin:${PATH}"
-
-cleanup() {
-  if [[ -n "${TEMP_PID}" ]] && kill -0 "${TEMP_PID}" 2>/dev/null; then
-    kill "${TEMP_PID}" 2>/dev/null || true
-  fi
-}
-
-trap cleanup EXIT
 
 curl_json() {
   local method="$1"
@@ -92,21 +79,6 @@ print(info.get("id", ""))
 PY
 }
 
-json_session_exists() {
-  python3 - "$1" "$2" <<'PY'
-import json, sys
-try:
-    sessions = json.loads(sys.argv[1])
-except Exception:
-    sessions = []
-title = sys.argv[2]
-for session in sessions:
-    if (session.get("title") or ((session.get("info") or {}).get("title")) or "") == title:
-        raise SystemExit(0)
-raise SystemExit(1)
-PY
-}
-
 json_find_session_id() {
   python3 - "$1" "$2" <<'PY'
 import json, sys
@@ -147,16 +119,6 @@ raise SystemExit(1)
 PY
 }
 
-pick_unused_port() {
-  python3 <<'PY'
-import socket
-sock = socket.socket()
-sock.bind(("127.0.0.1", 0))
-print(sock.getsockname()[1])
-sock.close()
-PY
-}
-
 wait_for_health() {
   local port="$1"
   for _ in $(seq 1 30); do
@@ -167,18 +129,6 @@ wait_for_health() {
   done
   return 1
 }
-
-if [[ "${BOOTSTRAP_MODE}" == "--bootstrap" ]]; then
-  if ! command -v opencode >/dev/null 2>&1; then
-    echo "[seed] OpenCode binary not found; skipping bootstrap seed."
-    exit 0
-  fi
-
-  SERVER_PORT="$(pick_unused_port)"
-  cd "${REPO_ROOT}"
-  nohup opencode serve --hostname 127.0.0.1 --port "${SERVER_PORT}" </dev/null >"${SEED_LOG_FILE}" 2>&1 &
-  TEMP_PID="$!"
-fi
 
 if ! wait_for_health "${SERVER_PORT}"; then
   echo "[seed] OpenCode server is not reachable yet; skipping intro session seed."
