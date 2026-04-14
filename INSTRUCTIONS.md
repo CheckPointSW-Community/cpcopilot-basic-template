@@ -35,7 +35,7 @@ Use this Codespace primarily for:
 
 ## Default OpenCode agent
 
-This repository configures a primary OpenCode agent named `checkpoint-copilot` and sets it as the default active agent.
+This repository configures a primary OpenCode agent named `CheckPoint-copolit` and sets it as the default active agent.
 
 That agent is tuned to:
 

@@ -11,7 +11,7 @@ When a Codespace starts from this template, it:
 - runs OpenCode in web mode
 - forwards the OpenCode web port and report server port
 - provisions a global `checkpoint-copilot` OpenCode skill
-- sets a `checkpoint-copilot` primary OpenCode agent as the default active agent
+- sets a `CheckPoint-copolit` primary OpenCode agent as the default active agent
 - sets the default model to the free OpenCode Zen model `opencode/big-pickle`
 - runs first-run setup for required secrets (with interactive prompts when possible)
 - shows a terminal welcome/instructions flow when you open the first visible bash terminal
