@@ -106,7 +106,7 @@ else
   fail "reports directory missing"
 fi
 
-if grep -q "start-report-server.sh" "${REPO_ROOT}/scripts/post-start.sh" 2>/dev/null; then
+if grep -q "start-report-server.sh" "${REPO_ROOT}/scripts/terminal-welcome.sh" 2>/dev/null; then
   pass "report server startup is configured"
 else
   fail "report server startup not configured"

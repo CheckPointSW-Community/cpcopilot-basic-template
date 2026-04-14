@@ -52,6 +52,8 @@ cat > "${SHELL_HOOK_FILE}" <<EOF
 #!/usr/bin/env bash
 [[ \$- != *i* ]] && return 0
 
+[[ -n "\${CHECKPOINT_COPILOT_SUPPRESS_WELCOME:-}" ]] && return 0
+
 export CHECKPOINT_COPILOT_REPO_ROOT="${REPO_ROOT}"
 if [[ -z "\${PWD:-}" || "\${PWD}" != "${REPO_ROOT}"* ]]; then
   return 0

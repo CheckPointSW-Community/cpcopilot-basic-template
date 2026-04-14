@@ -40,8 +40,8 @@
       "visibility": "private"
     }
   },
-  "postCreateCommand": "bash -i -c '${containerWorkspaceFolder}/scripts/setup-opencode.sh'",
-  "postStartCommand": "bash -i -c '${containerWorkspaceFolder}/scripts/post-start.sh'",
+  "postCreateCommand": "CHECKPOINT_COPILOT_SUPPRESS_WELCOME=1 bash -i -c '${containerWorkspaceFolder}/scripts/setup-opencode.sh'",
+  "postStartCommand": "CHECKPOINT_COPILOT_SUPPRESS_WELCOME=1 bash -i -c '${containerWorkspaceFolder}/scripts/post-start.sh'",
   "customizations": {
     "vscode": {
       "settings": {

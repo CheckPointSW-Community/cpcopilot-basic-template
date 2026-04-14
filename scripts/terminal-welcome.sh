@@ -6,7 +6,6 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 STATE_DIR="${HOME}/.local/state/checkpoint-copilot"
 STATUS_FILE="${HOME}/.config/opencode/checkpoint-setup-status.json"
 USER_ENV_FILE="${HOME}/.config/opencode/checkpoint-secrets.env"
-PROMPT_SENTINEL="/tmp/checkpoint-copilot-setup-prompted-${USER}"
 
 mkdir -p "${STATE_DIR}"
 
@@ -31,8 +30,7 @@ echo "- Instructions   : ${REPO_ROOT}/INSTRUCTIONS.md"
 echo "- Guided setup   : bash scripts/first-run-checkpoint-setup.sh"
 echo "- OpenCode start : after visible setup completes in this terminal"
 
-if [[ -t 0 && -t 1 && ! -f "${PROMPT_SENTINEL}" ]]; then
-  touch "${PROMPT_SENTINEL}"
+if [[ -t 0 && -t 1 && "${SETUP_COMPLETE}" != "true" ]]; then
   echo ""
   echo "[welcome] Running visible first-run setup now..."
   bash "${REPO_ROOT}/scripts/first-run-checkpoint-setup.sh" || true
@@ -54,7 +52,13 @@ if [[ "${SETUP_COMPLETE}" == "true" ]]; then
   echo "[welcome] Setup status: complete"
 else
   echo "[welcome] Setup status: pending"
-  echo "[welcome] You can continue using the guided setup command above or add Codespaces secrets and open a new terminal."
+  echo "[welcome] Required values are still missing, so OpenCode will not be started yet."
+  echo "[welcome] Re-run: bash scripts/first-run-checkpoint-setup.sh"
+  echo ""
+  echo "- OpenCode UI    : not started yet"
+  echo "- Reports        : not started yet"
+  echo "- Ports tip      : finish setup first, then open the forwarded URLs from the Codespaces Ports panel"
+  exit 0
 fi
 
 echo "[welcome] Starting local services..."
