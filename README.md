@@ -44,6 +44,8 @@ More details can be found here: https://github.com/CheckPointSW/mcp-servers/tree
 4. Complete the guided setup in the terminal if prompted.
 5. Open the forwarded OpenCode port (`4096`).
 6. Open the forwarded Reports port (`8081`).
+7. In OpenCode, ask the `CheckPoint-copilot` agent questions or request reports.
+8. See more detailed instructions and troubleshooting steps in the [INSTRUCTIONS.md](INSTRUCTIONS.md) file - also opened in the Codespace.
 
 Expected result:
 
