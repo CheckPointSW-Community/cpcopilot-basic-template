@@ -40,13 +40,8 @@ More details can be found here: https://github.com/CheckPointSW/mcp-servers/tree
 
 1. If you use Codespaces secrets, add the required values before creating the Codespace, as explained below. You can also enter them during guided setup (easier).
 2. Create a new Codespace from this repository using the green "Use this template" button on the top right.
-3. Wait for 2-3 minutes for the Codespace to initialize.
-4. Complete the guided setup in the terminal if prompted.
-5. Open the forwarded OpenCode port (`4096`).
-6. Open the forwarded Reports port (`8081`).
-7. In OpenCode, select the `checkpoint-copilot-template` session.
-8. Ask the `CheckPoint-copilot` agent questions or request reports about your Check Point environment, policies, logs, threat prevention, HTTPS inspection, and documentation, or just start with a simple "hey" to confirm that it's working.
-9. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for more detailed instructions and troubleshooting.
+3. Wait 2–3 minutes for the Codespace to initialize.
+4. When the Codespace is ready, follow the instructions in [INSTRUCTIONS.md](INSTRUCTIONS.md), which are shown in the main Codespace view, for the next steps.
 
 Expected result:
 
@@ -87,7 +82,7 @@ Log into a Debian/Ubuntu machine with Internet access and follow the instruction
 3. Complete the guided setup if prompted.
 4. Open the OpenCode URL printed by the script.
 5. Open the Reports URL printed by the script.
-6. In OpenCode, select the `checkpoint-copilot-template` session.
+6. In OpenCode, select the session for this repository if prompted.
 7. Ask the `CheckPoint-copilot` agent questions or request reports about your Check Point environment, policies, logs, threat prevention, HTTPS inspection, and documentation, or just start with a simple "hey" to confirm that it's working.
 8. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for more detailed instructions and troubleshooting.
 
