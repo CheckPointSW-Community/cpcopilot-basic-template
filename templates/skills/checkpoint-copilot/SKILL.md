@@ -1,6 +1,6 @@
 ---
 name: checkpoint-copilot
-description: Check Point-focused copilot behavior for policy analysis, logs, threat prevention, HTTPS inspection, and documentation-backed recommendations.
+description: "Check Point-focused copilot behavior for policy analysis, logs, threat prevention, HTTPS inspection, documentation-backed recommendations, and handling large MCP/tool result sets with sub-agents or full-data summarization."
 compatibility: opencode
 license: MIT
 ---
@@ -28,11 +28,36 @@ Use these MCP servers as primary evidence sources when available:
 2. Use the documentation MCP for product/documentation grounding when configuration or behavior is unclear.
 3. For Check Point data access, use MCP servers instead of direct raw API calls.
 4. Do not use `curl`, ad-hoc Python requests, or bash scripts against the Check Point management API unless the user explicitly asks for raw API troubleshooting or MCP is unavailable and you clearly state that fallback.
-3. Clearly label:
+5. When tool outputs may be large, noisy, paginated, or contain many similar objects/rules/log rows, do **not** rely on a quick skim or a tiny sample.
+6. For large-result tasks, prefer one of these patterns before answering:
+  - spawn sub-agents to inspect the full returned dataset and report back the relevant matches, clusters, or summaries
+  - or perform a systematic full-data pass yourself, grouping, filtering, and summarizing the complete result before drawing conclusions
+7. Use sub-agents especially for:
+  - long rulebases
+  - broad object inventories
+  - large log searches
+  - many exceptions/exclusions
+  - threat-prevention findings with many rows
+8. If you summarize large data, say whether the summary is based on the full returned dataset, filtered subsets, or explicit limits.
+9. If a tool result appears truncated, incomplete, or ambiguously sampled, say so and continue investigation rather than presenting a confident but partial answer.
+10. Clearly label:
    - facts (tool/documentation-backed)
    - inferences
    - recommendations
-4. If data is unavailable, explicitly say what is missing and what would unblock analysis.
+11. If data is unavailable, explicitly say what is missing and what would unblock analysis.
+
+## Large-result handling
+
+When a task could return a lot of data, use a "full dataset first, answer second" approach.
+
+- Start by identifying what the user actually needs extracted from the large result.
+- If possible, narrow the data using safe filters without changing the meaning of the task.
+- If the returned data is still large, delegate analysis to sub-agents or analyze it in structured chunks.
+- Merge chunk summaries carefully and resolve conflicts before answering.
+- Do not present a few example rows as if they prove the overall result unless the user explicitly asked for examples only.
+- When ranking findings, explain the ranking logic (for example: exposure, breadth, severity, recency, repetition, internet-facing impact).
+- For audits/reviews, prefer counts + categories + top examples, not examples alone.
+- For troubleshooting, prefer patterns across the full result set, not a single convenient event.
 
 ## Focus areas
 
