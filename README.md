@@ -3,7 +3,7 @@
 Check Point-focused OpenCode environment for:
 
 - GitHub Codespaces
-- native Debian/Ubuntu machines
+- native Debian/Ubuntu machines or VMs
 
 It starts OpenCode web, installs the Check Point MCP tools, provides a Check Point-focused agent/skills set, and serves HTML reports from `reports/`.
 
