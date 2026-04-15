@@ -22,7 +22,16 @@ Set these as GitHub Codespaces secrets for the repository or your account:
 - `CHECKPOINT_PASSWORD` (used if `CHECKPOINT_API_KEY` is blank; defaults to `demo123` during guided setup)
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
-- `OPENCODE_SERVER_PASSWORD` (defaults to `demo123` during guided setup)
+
+Optional values that guided setup will also ask for if missing:
+
+- `CHECKPOINT_MGMT_PORT` (default `443`)
+- `CHECKPOINT_DOC_REGION` (default `EU`)
+- `CHECKPOINT_DOC_AUTH_URL`
+- `OPENCODE_SERVER_USERNAME` (default `admin`)
+- `OPENCODE_SERVER_PASSWORD` (default `demo123`)
+- `OPENCODE_PORT` (default `4096`)
+- `REPORTS_PORT` (default `8081`)
 
 ## What this environment is optimized for
 
@@ -62,6 +71,7 @@ Important:
 
 - There is currently no officially documented OpenCode setting for forcing the Web UI right file panel closed by default, so this template does **not** apply a brittle UI-state hack for that.
 - Guided setup asks for a Check Point API key first. If you leave it blank, the flow falls back to username/password with defaults of `admin` / `demo123`.
+- Guided setup then keeps the documentation fields together, asks for the OpenCode username before the OpenCode password, and prompts for the optional port-related env vars with their defaults.
 
 ## Important behavior expectations
 

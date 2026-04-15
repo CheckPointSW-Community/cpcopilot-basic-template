@@ -27,6 +27,9 @@
     "CHECKPOINT_DOC_SECRET_KEY": {
       "description": "Secret key for the Check Point documentation MCP"
     },
+    "OPENCODE_SERVER_USERNAME": {
+      "description": "Basic-auth username for OpenCode web mode (defaults to admin if left blank during setup)"
+    },
     "OPENCODE_SERVER_PASSWORD": {
       "description": "Basic-auth password for OpenCode web mode (defaults to demo123 if left blank during setup)"
     }

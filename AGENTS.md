@@ -35,7 +35,7 @@ Startup command pattern:
 
 - `opencode web --hostname 0.0.0.0 --port ${OPENCODE_PORT}`
 
-`OPENCODE_SERVER_PASSWORD` is honored if provided.
+`OPENCODE_SERVER_USERNAME` and `OPENCODE_SERVER_PASSWORD` are honored if provided.
 
 ## How to open the OpenCode Web UI
 
@@ -61,6 +61,7 @@ Provide these via Codespaces secrets:
 - `CHECKPOINT_PASSWORD` (used when `CHECKPOINT_API_KEY` is blank)
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
+- `OPENCODE_SERVER_USERNAME` (defaults to `admin` during guided setup)
 - `OPENCODE_SERVER_PASSWORD` (defaults to `demo123` during guided setup)
 
 Never place real secrets in tracked files.
@@ -73,11 +74,13 @@ On start, `scripts/first-run-checkpoint-setup.sh`:
 2. detects missing mandatory values
 3. prompts interactively when possible
 4. asks for a Check Point API key first; when left blank it falls back to username/password
-5. defaults username suggestion to `admin`
-6. defaults both the Check Point password and OpenCode password to `demo123` when left blank
-7. writes user-scoped runtime values under `~/.config/opencode/checkpoint-secrets.env`
-8. updates global OpenCode config (`~/.config/opencode/opencode.json`) without duplicating MCP entries
-9. prints a **redacted** setup summary
+5. prompts for optional management/doc/port settings using the same env names as the template
+6. defaults the Check Point username suggestion to `admin`
+7. defaults the OpenCode username to `admin`
+8. defaults both the Check Point password and OpenCode password to `demo123` when left blank
+9. writes user-scoped runtime values under `~/.config/opencode/checkpoint-secrets.env`
+10. updates global OpenCode config (`~/.config/opencode/opencode.json`) without duplicating MCP entries
+11. prints a **redacted** setup summary
 
 If startup is non-interactive and values are missing, run manually:
 

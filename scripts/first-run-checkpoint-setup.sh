@@ -12,6 +12,7 @@ MCP_FRAGMENT_FILE="${REPO_ROOT}/templates/opencode/checkpoint-mcp-fragment.json"
 
 DEFAULT_CHECKPOINT_USERNAME="admin"
 DEFAULT_CHECKPOINT_PASSWORD="demo123"
+DEFAULT_OPENCODE_USERNAME="admin"
 DEFAULT_OPENCODE_PASSWORD="demo123"
 
 mkdir -p "${OPENCODE_CONFIG_DIR}" "${HOME}/.local/state/checkpoint-copilot"
@@ -29,11 +30,12 @@ CHECKPOINT_USERNAME="${CHECKPOINT_USERNAME:-}"
 CHECKPOINT_PASSWORD="${CHECKPOINT_PASSWORD:-}"
 CHECKPOINT_DOC_CLIENT_ID="${CHECKPOINT_DOC_CLIENT_ID:-}"
 CHECKPOINT_DOC_SECRET_KEY="${CHECKPOINT_DOC_SECRET_KEY:-}"
-CHECKPOINT_MGMT_PORT="${CHECKPOINT_MGMT_PORT:-443}"
-CHECKPOINT_DOC_REGION="${CHECKPOINT_DOC_REGION:-EU}"
+CHECKPOINT_MGMT_PORT="${CHECKPOINT_MGMT_PORT:-}"
+CHECKPOINT_DOC_REGION="${CHECKPOINT_DOC_REGION:-}"
 CHECKPOINT_DOC_AUTH_URL="${CHECKPOINT_DOC_AUTH_URL:-}"
-OPENCODE_PORT="${OPENCODE_PORT:-4096}"
-REPORTS_PORT="${REPORTS_PORT:-8081}"
+OPENCODE_PORT="${OPENCODE_PORT:-}"
+REPORTS_PORT="${REPORTS_PORT:-}"
+OPENCODE_SERVER_USERNAME="${OPENCODE_SERVER_USERNAME:-}"
 OPENCODE_SERVER_PASSWORD="${OPENCODE_SERVER_PASSWORD:-}"
 
 is_interactive=false
@@ -99,6 +101,32 @@ prompt_secret_with_default() {
   printf -v "${var_name}" '%s' "${input_value}"
 }
 
+prompt_with_default() {
+  local var_name="$1"
+  local prompt_text="$2"
+  local default_value="${3:-}"
+
+  local current_value="${!var_name:-}"
+  if [[ -n "${current_value}" ]]; then
+    return
+  fi
+
+  if [[ "${is_interactive}" != "true" ]]; then
+    printf -v "${var_name}" '%s' "${default_value}"
+    return
+  fi
+
+  local input_value=""
+  if [[ -n "${default_value}" ]]; then
+    read -r -p "${prompt_text} [${default_value}] " input_value
+    input_value="${input_value:-${default_value}}"
+  else
+    read -r -p "${prompt_text} " input_value
+  fi
+
+  printf -v "${var_name}" '%s' "${input_value}"
+}
+
 prompt_optional_secret() {
   local var_name="$1"
   local prompt_text="$2"
@@ -123,6 +151,7 @@ write_env_line() {
 }
 
 prompt_if_missing "CHECKPOINT_MGMT_HOST" "Check Point management host (DNS/IP):"
+prompt_with_default "CHECKPOINT_MGMT_PORT" "Optional Check Point management port" "443"
 prompt_optional_secret "CHECKPOINT_API_KEY" "Check Point management API key (press Enter to use username/password instead):"
 
 if [[ -z "${CHECKPOINT_API_KEY}" ]]; then
@@ -140,13 +169,13 @@ fi
 
 prompt_if_missing "CHECKPOINT_DOC_CLIENT_ID" "Documentation tool CLIENT_ID:"
 prompt_if_missing "CHECKPOINT_DOC_SECRET_KEY" "Documentation tool SECRET_KEY:" "" true
+prompt_with_default "CHECKPOINT_DOC_REGION" "Optional documentation REGION" "EU"
+prompt_if_missing "CHECKPOINT_DOC_AUTH_URL" "Optional documentation AUTH_URL (press Enter to skip):"
 
+prompt_with_default "OPENCODE_SERVER_USERNAME" "OpenCode web username" "${DEFAULT_OPENCODE_USERNAME}"
 prompt_secret_with_default "OPENCODE_SERVER_PASSWORD" "OpenCode web password" "${DEFAULT_OPENCODE_PASSWORD}"
-
-if [[ "${is_interactive}" == "true" && -z "${CHECKPOINT_DOC_AUTH_URL}" ]]; then
-  read -r -p "Optional documentation AUTH_URL (press Enter to skip): " auth_url_input
-  CHECKPOINT_DOC_AUTH_URL="${auth_url_input:-}"
-fi
+prompt_with_default "OPENCODE_PORT" "Optional OpenCode web port" "4096"
+prompt_with_default "REPORTS_PORT" "Optional reports port" "8081"
 
 {
 cat <<EOF
@@ -162,6 +191,7 @@ write_env_line "CHECKPOINT_DOC_CLIENT_ID" "${CHECKPOINT_DOC_CLIENT_ID}"
 write_env_line "CHECKPOINT_DOC_SECRET_KEY" "${CHECKPOINT_DOC_SECRET_KEY}"
 write_env_line "CHECKPOINT_DOC_REGION" "${CHECKPOINT_DOC_REGION}"
 write_env_line "CHECKPOINT_DOC_AUTH_URL" "${CHECKPOINT_DOC_AUTH_URL}"
+write_env_line "OPENCODE_SERVER_USERNAME" "${OPENCODE_SERVER_USERNAME}"
 write_env_line "OPENCODE_SERVER_PASSWORD" "${OPENCODE_SERVER_PASSWORD}"
 write_env_line "OPENCODE_PORT" "${OPENCODE_PORT}"
 write_env_line "REPORTS_PORT" "${REPORTS_PORT}"
@@ -232,7 +262,9 @@ echo "Management username     : $(redact "${CHECKPOINT_USERNAME}")"
 echo "Management password     : $(redact "${CHECKPOINT_PASSWORD}")"
 echo "Doc CLIENT_ID           : $(redact "${CHECKPOINT_DOC_CLIENT_ID}")"
 echo "Doc SECRET_KEY          : $(redact "${CHECKPOINT_DOC_SECRET_KEY}")"
+echo "Doc REGION              : $(redact "${CHECKPOINT_DOC_REGION}")"
 echo "Doc AUTH_URL            : $(redact "${CHECKPOINT_DOC_AUTH_URL}")"
+echo "OpenCode username       : $(redact "${OPENCODE_SERVER_USERNAME}")"
 echo "OpenCode password       : $(redact "${OPENCODE_SERVER_PASSWORD}")"
 echo "OpenCode config file    : ${OPENCODE_CONFIG_FILE}"
 echo "Setup complete          : ${setup_complete}"
