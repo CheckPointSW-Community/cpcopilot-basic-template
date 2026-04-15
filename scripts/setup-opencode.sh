@@ -6,7 +6,7 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 NPM_GLOBAL_DIR="${HOME}/.local/npm-global"
 OPENCODE_CONFIG_DIR="${HOME}/.config/opencode"
-SKILLS_SRC_DIR="${REPO_ROOT}/templates/skills"
+SKILLS_SRC_DIR="${REPO_ROOT}/.opencode/skills"
 SKILLS_DEST_DIR="${OPENCODE_CONFIG_DIR}/skills"
 SHELL_HOOK_FILE="${OPENCODE_CONFIG_DIR}/checkpoint-shell-hook.sh"
 
@@ -82,7 +82,8 @@ mkdir -p "${REPO_ROOT}/reports"
 
 cat <<'MSG'
 [setup] OpenCode runtime prepared.
-[setup] Global skills installed from templates/skills/
+[setup] Project skills available from .opencode/skills/
+[setup] Global skill copies installed to ~/.config/opencode/skills/
 [setup] Interactive terminal welcome hook installed.
 [setup] Run scripts/first-run-checkpoint-setup.sh to complete Check Point MCP setup if needed.
 MSG

@@ -29,6 +29,8 @@ A global OpenCode skill named `checkpoint-copilot` is installed at Codespace sta
 
 An additional OpenCode skill named `checkpoint-brand-webui` is also installed and should be used for HTML reports, dashboards, and web pages that need to follow Check Point brand styling.
 
+Project-local skills are stored under `.opencode/skills/` so OpenCode can discover them directly from the current repository folder.
+
 ## How OpenCode is started
 
 OpenCode is started automatically in web mode by:
@@ -45,7 +47,7 @@ Startup command pattern:
 
 - Open the forwarded port for `OPENCODE_PORT` (default `4096`) in Codespaces.
 - In a real Codespace, the forwarded URL pattern is `https://$CODESPACE_NAME-$OPENCODE_PORT.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN`.
-- Outside Codespaces, use the local URL inside the container, such as `http://localhost:4096`.
+- Outside Codespaces, prefer the local network URL printed by the startup scripts; they fall back to `localhost` when needed.
 
 ## How to open generated HTML reports
 
@@ -93,6 +95,8 @@ If startup is non-interactive and values are missing, run manually:
 For a native Debian/Ubuntu machine, a convenience bootstrap helper is also provided:
 
 - `bash scripts/bootstrap-local-debian.sh`
+
+That helper installs prerequisites, prepares OpenCode, runs the guided welcome/setup flow, and starts the local services.
 
 When you open a terminal in Codespaces, the environment also prints a short welcome message and will guide you through pending setup interactively.
 

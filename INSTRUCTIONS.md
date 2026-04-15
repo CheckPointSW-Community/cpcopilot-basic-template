@@ -6,11 +6,11 @@ Welcome to the Check Point-focused OpenCode environment for Codespaces or local 
 
 1. In Codespaces, open the first visible bash terminal. On local Linux, open a bash shell in the repository root.
 2. Complete the guided setup shown in that terminal if prompted.
-3. After setup finishes, OpenCode and the reports server are started for you in Codespaces; on local Linux start them with `bash scripts/start-opencode-web.sh` and `bash scripts/start-report-server.sh`.
+3. After setup finishes, OpenCode and the reports server are started for you in Codespaces; on local Debian/Ubuntu, `bash scripts/bootstrap-local-debian.sh` also runs the same guided setup and startup flow for you.
 4. Open the **OpenCode Web UI** on port `4096`.
 5. Open the **HTML Reports** server on port `8081`.
 
-When running inside GitHub Codespaces, the terminal welcome flow prints the forwarded URLs directly using the documented `CODESPACE_NAME` and `GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN` environment variables. Outside Codespaces, it prints `localhost` URLs instead.
+When running inside GitHub Codespaces, the terminal welcome flow prints the forwarded URLs directly using the documented `CODESPACE_NAME` and `GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN` environment variables. Outside Codespaces, it prefers the machine's local network IP and falls back to `localhost` if needed.
 
 ## Required secrets
 

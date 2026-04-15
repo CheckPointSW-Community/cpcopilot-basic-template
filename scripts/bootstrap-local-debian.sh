@@ -38,15 +38,5 @@ fi
 echo "[bootstrap] Preparing OpenCode runtime..."
 bash "${REPO_ROOT}/scripts/setup-opencode.sh"
 
-cat <<'MSG'
-
-[bootstrap] Local Debian/Ubuntu bootstrap complete.
-[bootstrap] Next steps:
-  1. bash scripts/first-run-checkpoint-setup.sh
-  2. bash scripts/start-opencode-web.sh
-  3. bash scripts/start-report-server.sh
-
-[bootstrap] Default local URLs:
-  - OpenCode: http://localhost:4096
-  - Reports : http://localhost:8081
-MSG
+echo "[bootstrap] Running guided welcome/setup flow..."
+bash "${REPO_ROOT}/scripts/terminal-welcome.sh"

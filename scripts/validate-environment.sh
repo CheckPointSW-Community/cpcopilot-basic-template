@@ -94,13 +94,13 @@ else
   fail "INSTRUCTIONS.md is missing"
 fi
 
-if [[ -f "${HOME}/.config/opencode/skills/checkpoint-copilot/SKILL.md" ]] || [[ -f "${REPO_ROOT}/templates/skills/checkpoint-copilot/SKILL.md" ]]; then
+if [[ -f "${HOME}/.config/opencode/skills/checkpoint-copilot/SKILL.md" ]] || [[ -f "${REPO_ROOT}/.opencode/skills/checkpoint-copilot/SKILL.md" ]]; then
   pass "checkpoint-copilot skill exists"
 else
   fail "checkpoint-copilot skill missing"
 fi
 
-if [[ -f "${HOME}/.config/opencode/skills/checkpoint-brand-webui/SKILL.md" ]] || [[ -f "${REPO_ROOT}/templates/skills/checkpoint-brand-webui/SKILL.md" ]]; then
+if [[ -f "${HOME}/.config/opencode/skills/checkpoint-brand-webui/SKILL.md" ]] || [[ -f "${REPO_ROOT}/.opencode/skills/checkpoint-brand-webui/SKILL.md" ]]; then
   pass "checkpoint-brand-webui skill exists"
 else
   fail "checkpoint-brand-webui skill missing"

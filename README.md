@@ -60,6 +60,8 @@ Based on the official Check Point MCP packages:
 - `checkpoint-copilot` for Check Point operational workflows
 - `checkpoint-brand-webui` for HTML reports, dashboards, and web UI that should follow Check Point 2026 brand styling
 
+These are stored in the project under `.opencode/skills/`, so OpenCode can discover them directly from the current repository folder.
+
 ## Runtime flow
 
 - `postCreateCommand` runs `scripts/setup-opencode.sh` and quick validation.
@@ -81,16 +83,9 @@ If secrets are missing and startup is non-interactive, setup remains pending and
 For a native Debian/Ubuntu machine outside Codespaces:
 
 1. Clone the repository.
-2. Run `bash scripts/bootstrap-local-debian.sh` to install prerequisites and prepare the OpenCode runtime.
-3. Run `bash scripts/first-run-checkpoint-setup.sh` to enter or confirm the required environment values.
-4. Start the services:
-  - `bash scripts/start-opencode-web.sh`
-  - `bash scripts/start-report-server.sh`
+2. Run `bash scripts/bootstrap-local-debian.sh` to install prerequisites, prepare the OpenCode runtime, run the guided setup, and start the services.
 
-Default local URLs:
-
-- OpenCode Web UI: `http://localhost:4096`
-- HTML reports server: `http://localhost:8081`
+Default local connection URLs are printed by the terminal startup scripts. Outside Codespaces they now prefer the machine's local network IP (for example `http://192.168.1.50:4096`) and still fall back to `localhost` when needed.
 
 The shell hook and guided setup also work locally when you open a new interactive bash shell from the repository root.
 
