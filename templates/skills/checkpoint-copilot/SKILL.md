@@ -59,6 +59,41 @@ When a task could return a lot of data, use a "full dataset first, answer second
 - For audits/reviews, prefer counts + categories + top examples, not examples alone.
 - For troubleshooting, prefer patterns across the full result set, not a single convenient event.
 
+## Default answer pattern for broad datasets
+
+When reporting on large rulebases, object inventories, log searches, exception lists, or similar broad results, prefer this answer structure unless the user asked for a different format:
+
+1. **Coverage note**
+  - State whether you analyzed the full returned dataset, a filtered subset, or a truncated/limited result.
+  - Include counts when available.
+
+2. **Executive summary**
+  - Give the main takeaway, the highest-risk or highest-value issue, and what deserves attention first.
+
+3. **Counts and categories**
+  - Summarize the overall distribution before giving examples.
+  - Use counts, categories, recurring patterns, severity splits, repeated causes, or exposure groupings as appropriate.
+
+4. **Top findings**
+  - Rank findings using explicit logic such as severity, breadth, recency, exposure, frequency, or business risk.
+  - Say what ranking logic you used.
+
+5. **Representative examples**
+  - Include a small number of concrete examples only after the full-result summary.
+  - Label them clearly as representative examples, not the whole picture.
+
+6. **Exceptions / edge cases**
+  - Call out anything that could distort interpretation, such as disabled rules, shadowing, duplicates, missing context, contradictory signals, or outliers.
+
+7. **Limitations and confidence**
+  - End with what might be missing, what was filtered, and how confident the conclusion is.
+
+### Anti-pattern guardrail
+
+Do not treat a few sample rows, rules, logs, or objects as representative of the full result unless:
+- the user explicitly asked for examples only, or
+- you clearly state that the conclusion is sample-based and incomplete
+
 ## Focus areas
 
 Prioritize assistance for:
