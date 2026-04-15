@@ -39,8 +39,8 @@ More details can be found here: https://github.com/CheckPointSW/mcp-servers/tree
 
 ### Start it
 
-1. If you use Codespaces secrets, add the required values before creating the Codespace, as explained below. You can also enter them during guided setup (easier).
-2. Create a new Codespace from this repository using the green "Use this template" button on the top right.
+1. If you use Codespaces secrets, add the required values before creating the Codespace, as explained below. If you do not know them yet, you can enter them during guided setup instead and skip to step 2.
+2. Create a new Codespace from this repository using the green "Use this template" button in the top-right corner, then click "Open in Codespaces".
 3. Wait 2–3 minutes for the Codespace to initialize.
 4. When the Codespace is ready, follow the instructions in [INSTRUCTIONS.md](INSTRUCTIONS.md), which are shown in the main Codespace view, for the next steps.
 
