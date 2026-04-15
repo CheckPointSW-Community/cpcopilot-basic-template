@@ -1,37 +1,29 @@
-# Check Point OpenCode Copilot Codespaces Template
+# Check Point OpenCode Copilot
 
-Template repository for spinning up a Check Point-focused OpenCode environment in GitHub Codespaces.
+Check Point-focused OpenCode environment for:
 
-It also supports running directly on a current Debian/Ubuntu machine outside Codespaces with a more manual startup flow.
+- GitHub Codespaces
+- native Debian/Ubuntu machines
 
-> ✅ **First-run success target:** after Codespace startup, both OpenCode (`4096`) and reports (`8081`) are reachable and setup status prints `complete`.
+It starts OpenCode web, installs the Check Point MCP tools, provides a Check Point-focused agent/skills set, and serves HTML reports from `reports/`.
 
-When a Codespace starts from this template, it:
+## Quick start in GitHub Codespaces
 
-- installs OpenCode automatically
-- configures Node.js/npm runtime support for Check Point MCP servers
-- runs OpenCode in web mode
-- forwards the OpenCode web port and report server port
-- provisions a global `checkpoint-copilot` OpenCode skill
-- provisions a global `checkpoint-brand-webui` OpenCode skill for branded reports and web UI
-- sets a `CheckPoint-copilot` primary OpenCode agent as the default active agent
-- sets the default model to the free OpenCode Zen model `opencode/big-pickle`
-- runs first-run setup for required secrets (with interactive prompts when possible)
-- shows a terminal welcome/instructions flow when you open the first visible bash terminal
-- validates setup and prints a redacted summary
+### Before you create the Codespace
 
-## Required Codespaces secrets
-
-Set these in your repository/user Codespaces secrets before creating a Codespace:
+Collect the required values first.
 
 - `CHECKPOINT_MGMT_HOST`
-- `CHECKPOINT_API_KEY` (optional; preferred when available)
-- `CHECKPOINT_USERNAME` (used when `CHECKPOINT_API_KEY` is blank)
-- `CHECKPOINT_PASSWORD` (used when `CHECKPOINT_API_KEY` is blank)
+  - Placeholder: **[Add your internal instructions here for how to find the Check Point management DNS name or IP]**
+- Either:
+  - `CHECKPOINT_API_KEY`
+  - or `CHECKPOINT_USERNAME` + `CHECKPOINT_PASSWORD`
+  - Placeholder: **[Add your internal instructions here for how to obtain the API key or management credentials]**
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
+  - Placeholder: **[Add your internal instructions here for how to obtain the documentation tool client ID and secret key]**
 
-Optional:
+Optional values if you need to override defaults:
 
 - `CHECKPOINT_MGMT_PORT` (default `443`)
 - `CHECKPOINT_DOC_REGION` (default `EU`)
@@ -41,106 +33,128 @@ Optional:
 - `OPENCODE_PORT` (default `4096`)
 - `REPORTS_PORT` (default `8081`)
 
-A non-secret template is provided in `.env.example`.
+### Start it
 
-Guided setup asks for a Check Point API key first. If you leave it blank, the setup falls back to username/password with defaults of `admin` / `demo123`. It also prompts for the OpenCode web username/password with defaults of `admin` / `demo123`, plus the optional management/doc/port values in the same env-var order used by the template.
+1. Create a new Codespace from this repository.
+2. If you use Codespaces secrets, add the required values before creating the Codespace. You can also enter them during guided setup.
+3. Open the first visible bash terminal.
+4. Complete the guided setup if prompted.
+5. Open the forwarded OpenCode port (`4096`).
+6. Open the forwarded Reports port (`8081`).
 
-## MCP servers preconfigured
+Expected result:
 
-Based on the official Check Point MCP packages:
+- OpenCode is reachable
+- reports index is reachable
+- setup status shows `complete`
 
-- `management` → `@chkp/quantum-management-mcp`
-- `management-logs` → `@chkp/management-logs-mcp`
-- `threat-prevention` → `@chkp/threat-prevention-mcp`
-- `https-inspection` → `@chkp/https-inspection-mcp`
-- `documentation-tool` → `@chkp/documentation-mcp`
+## Quick start on Debian/Ubuntu
 
-## Included OpenCode skills
+### Before you start
 
-- `checkpoint-copilot` for Check Point operational workflows
-- `checkpoint-brand-webui` for HTML reports, dashboards, and web UI that should follow Check Point 2026 brand styling
+Collect the same required values:
 
-These are stored in the project under `.opencode/skills/`, so OpenCode can discover them directly from the current repository folder.
+- `CHECKPOINT_MGMT_HOST`
+  - Placeholder: **[Add your internal instructions here for how to find the Check Point management DNS name or IP]**
+- Either:
+  - `CHECKPOINT_API_KEY`
+  - or `CHECKPOINT_USERNAME` + `CHECKPOINT_PASSWORD`
+  - Placeholder: **[Add your internal instructions here for how to obtain the API key or management credentials]**
+- `CHECKPOINT_DOC_CLIENT_ID`
+- `CHECKPOINT_DOC_SECRET_KEY`
+  - Placeholder: **[Add your internal instructions here for how to obtain the documentation tool client ID and secret key]**
 
-## Runtime flow
+Optional values if you need to override defaults:
 
-- `postCreateCommand` runs `scripts/setup-opencode.sh` and quick validation.
-- `postCreateCommand` runs `scripts/setup-opencode.sh`.
-- `postStartCommand` runs `scripts/post-start.sh` for lightweight background preparation only.
-- The first visible bash terminal runs `scripts/terminal-welcome.sh` through a shell hook, and that visible terminal flow:
-  1. runs first-run setup (`scripts/first-run-checkpoint-setup.sh`)
-  2. starts the reports server (`scripts/start-report-server.sh`)
-  3. starts OpenCode web (`scripts/start-opencode-web.sh`)
-  4. runs quick validation (`scripts/validate-environment.sh --quick`)
-- On later Codespace restarts/resumes, `postStartCommand` automatically starts OpenCode and the reports server again if setup had already completed.
+- `CHECKPOINT_MGMT_PORT` (default `443`)
+- `CHECKPOINT_DOC_REGION` (default `EU`)
+- `CHECKPOINT_DOC_AUTH_URL`
+- `OPENCODE_SERVER_USERNAME` (default `admin`)
+- `OPENCODE_SERVER_PASSWORD` (default `demo123`)
+- `OPENCODE_PORT` (default `4096`)
+- `REPORTS_PORT` (default `8081`)
 
-If secrets are missing and startup is non-interactive, setup remains pending and you can complete it manually:
+### Start it
+
+1. Clone this repository onto a current Debian/Ubuntu machine.
+2. Run:
+   - `bash scripts/bootstrap-local-debian.sh`
+3. Complete the guided setup if prompted.
+4. Open the OpenCode URL printed by the script.
+5. Open the Reports URL printed by the script.
+
+Outside Codespaces, the startup scripts prefer the machine's local network IP and fall back to `localhost` when needed.
+
+## What this repository includes
+
+- OpenCode web on port `4096`
+- reports server on port `8081`
+- Check Point MCP packages:
+  - `@chkp/quantum-management-mcp`
+  - `@chkp/management-logs-mcp`
+  - `@chkp/threat-prevention-mcp`
+  - `@chkp/https-inspection-mcp`
+  - `@chkp/documentation-mcp`
+- default primary agent: `CheckPoint-copilot`
+- default model: `opencode/big-pickle`
+- project-local skills under `.opencode/skills/`:
+  - `checkpoint-copilot`
+  - `checkpoint-brand-webui`
+
+## Where settings are stored
+
+- runtime environment values: `~/.config/opencode/checkpoint-secrets.env`
+- runtime status: `~/.config/opencode/checkpoint-setup-status.json`
+- global OpenCode config: `~/.config/opencode/opencode.json`
+- project config: `opencode.json`
+
+No real credentials are stored in tracked files.
+
+## Useful commands
+
+- Debian/Ubuntu bootstrap: `bash scripts/bootstrap-local-debian.sh`
+- guided setup: `bash scripts/first-run-checkpoint-setup.sh`
+- start OpenCode: `bash scripts/start-opencode-web.sh`
+- start reports server: `bash scripts/start-report-server.sh`
+- rerun welcome flow: `bash scripts/terminal-welcome.sh`
+- validate environment: `bash scripts/validate-environment.sh`
+
+## Troubleshooting
+
+### Setup stays pending
+
+One or more required values are still missing.
+
+Run:
 
 - `bash scripts/first-run-checkpoint-setup.sh`
 
-## Local Debian/Ubuntu usage
+### OpenCode is not reachable
 
-For a native Debian/Ubuntu machine outside Codespaces:
+Run:
 
-1. Clone the repository.
-2. Run `bash scripts/bootstrap-local-debian.sh` to install prerequisites, prepare the OpenCode runtime, run the guided setup, and start the services.
+- `bash scripts/start-opencode-web.sh`
 
-Default local connection URLs are printed by the terminal startup scripts. Outside Codespaces they now prefer the machine's local network IP (for example `http://192.168.1.50:4096`) and still fall back to `localhost` when needed.
+Then open the preferred URL printed in the terminal.
 
-The shell hook and guided setup also work locally when you open a new interactive bash shell from the repository root.
+### Reports are not reachable
 
-## Access URLs in Codespaces
+Run:
 
-- OpenCode Web UI: forwarded `4096`
-- HTML reports server: forwarded `8081`
+- `bash scripts/start-report-server.sh`
 
-In a real Codespace, the terminal can derive the forwarded hostname from the documented default variables `CODESPACE_NAME` and `GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN`, producing URLs like:
+Then open the preferred URL printed in the terminal.
 
-- `https://$CODESPACE_NAME-4096.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN`
-- `https://$CODESPACE_NAME-8081.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN`
+### OpenCode asks for provider setup
 
-Outside Codespaces, the scripts fall back to `http://localhost:PORT`.
+The default model is `opencode/big-pickle`, but OpenCode Zen still needs to be connected.
 
-## Reports
+### MCP startup is slow
 
-Save generated HTML reports in `reports/`.
+Rerun:
 
-The local report server publishes this directory for easy sharing/review within the Codespace session.
+- `bash scripts/setup-opencode.sh`
 
-## Security notes
+or on Debian/Ubuntu:
 
-- No real credentials are stored in this repository.
-- Secrets can come from Codespaces secrets, normal environment variables, or the guided setup prompts, and are stored only in user-scoped runtime files under `~/.config/opencode`.
-- Validation output is redacted and does not print secrets.
-
-## Quick troubleshooting
-
-### Setup shows `pending`
-
-- Cause: one or more mandatory secrets are missing.
-- Fix: add the missing environment values and run `bash scripts/first-run-checkpoint-setup.sh`.
-
-### OpenCode UI is not reachable
-
-- Cause: OpenCode process did not start or port forwarding was not opened yet.
-- Fix: run `bash scripts/start-opencode-web.sh`, then open the preferred URL printed in the terminal (forwarded in Codespaces, localhost elsewhere).
-
-### Reports URL is not reachable
-
-- Cause: local HTML server is not running.
-- Fix: run `bash scripts/start-report-server.sh`, then open the preferred URL printed in the terminal (forwarded in Codespaces, localhost elsewhere).
-
-### MCP checks feel slow at OpenCode startup
-
-- Cause: MCP packages may not be locally installed/cached yet.
-- Fix: rerun `bash scripts/setup-opencode.sh` once, or `bash scripts/bootstrap-local-debian.sh` on Debian/Ubuntu. This template installs the Check Point MCP packages locally and launches them via local binaries instead of `npx -y`.
-
-### Big Pickle is configured but OpenCode still asks for provider setup
-
-- Cause: the default model is `opencode/big-pickle`, but OpenCode Zen authentication has not been completed yet.
-- Fix: connect OpenCode to the `opencode` provider / OpenCode Zen, then restart OpenCode.
-
-### Web UI panel layout is not exactly as desired
-
-- Cause: OpenCode's official config/docs do not currently document a supported setting to force the right file panel closed on Web UI open.
-- Fix: use the default agent/model setup; panel-layout forcing is intentionally not hacked into the template.
+- `bash scripts/bootstrap-local-debian.sh`
