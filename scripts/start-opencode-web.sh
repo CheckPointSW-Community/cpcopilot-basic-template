@@ -22,6 +22,8 @@ if [[ -f "${USER_ENV_FILE}" ]]; then
 fi
 
 OPENCODE_PORT="${OPENCODE_PORT:-4096}"
+OPENCODE_SERVER_USERNAME="${OPENCODE_SERVER_USERNAME:-}"
+OPENCODE_SERVER_PASSWORD="${OPENCODE_SERVER_PASSWORD:-}"
 
 export PATH="${HOME}/.local/npm-global/bin:${PATH}"
 export BROWSER="/bin/true"
@@ -34,9 +36,30 @@ if ! command -v opencode >/dev/null 2>&1; then
   exit 1
 fi
 
+read_proc_env_value() {
+  local pid="$1"
+  local key="$2"
+
+  if [[ ! -r "/proc/${pid}/environ" ]]; then
+    return 1
+  fi
+
+  tr '\0' '\n' < "/proc/${pid}/environ" | sed -n "s/^${key}=//p" | head -n 1
+}
+
 if [[ -f "${PID_FILE}" ]] && kill -0 "$(cat "${PID_FILE}")" 2>/dev/null; then
-  echo "[opencode] already running on port ${OPENCODE_PORT}."
-  exit 0
+  existing_pid="$(cat "${PID_FILE}")"
+  running_username="$(read_proc_env_value "${existing_pid}" "OPENCODE_SERVER_USERNAME" || true)"
+  running_password="$(read_proc_env_value "${existing_pid}" "OPENCODE_SERVER_PASSWORD" || true)"
+
+  if [[ "${running_username}" == "${OPENCODE_SERVER_USERNAME}" && "${running_password}" == "${OPENCODE_SERVER_PASSWORD}" ]]; then
+    echo "[opencode] already running on port ${OPENCODE_PORT}."
+    exit 0
+  fi
+
+  echo "[opencode] existing process is running with different auth settings; restarting."
+  kill "${existing_pid}" 2>/dev/null || true
+  rm -f "${PID_FILE}"
 fi
 
 rm -f "${STATE_DIR}/opencode-intro-seeded" "${STATE_DIR}/opencode-intro-session.json"
