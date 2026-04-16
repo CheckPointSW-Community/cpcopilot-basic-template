@@ -27,3 +27,27 @@ stop_service() {
 
 stop_service "OpenCode"      "${STATE_DIR}/opencode-web.pid"
 stop_service "Report server" "${STATE_DIR}/report-server.pid"
+
+# Kill any orphaned MCP processes that OpenCode may have left behind.
+# These accumulate across restarts when nohup prevents clean child reaping.
+MCP_PATTERNS=(
+  "quantum-management-mcp"
+  "spark-management-mcp"
+  "management-logs-mcp"
+  "threat-prevention-mcp"
+  "https-inspection-mcp"
+  "documentation-mcp"
+)
+
+orphans_found=false
+for pattern in "${MCP_PATTERNS[@]}"; do
+  if pgrep -f "${pattern}" >/dev/null 2>&1; then
+    pkill -f "${pattern}" 2>/dev/null || true
+    echo "[services] MCP orphans killed: ${pattern}"
+    orphans_found=true
+  fi
+done
+
+if [[ "${orphans_found}" == "false" ]]; then
+  echo "[services] No orphaned MCP processes found."
+fi
