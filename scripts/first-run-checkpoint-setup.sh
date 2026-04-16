@@ -221,9 +221,11 @@ write_env_line() {
   printf '\n'
 }
 
-if [[ -z "${CHECKPOINT_MGMT_HOST}" && -z "${CHECKPOINT_MGMT_URL}" ]]; then
-  prompt_if_missing "CHECKPOINT_MGMT_HOST" "Check Point management endpoint (DNS/IP or Smart-1 Cloud URL):"
-fi
+# Merge whichever endpoint var is set into CHECKPOINT_MGMT_HOST for the prompt,
+# then let normalize_management_endpoint re-detect and split them afterwards.
+CHECKPOINT_MGMT_HOST="${CHECKPOINT_MGMT_URL:-${CHECKPOINT_MGMT_HOST}}"
+CHECKPOINT_MGMT_URL=""
+prompt_if_missing "CHECKPOINT_MGMT_HOST" "Check Point management endpoint (DNS/IP or Smart-1 Cloud URL):"
 
 normalize_management_endpoint
 
