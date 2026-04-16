@@ -307,12 +307,17 @@ EOF
 
 MERGED_JSON="$(mktemp)"
 if [[ -f "${OPENCODE_CONFIG_FILE}" ]] && jq empty "${OPENCODE_CONFIG_FILE}" >/dev/null 2>&1; then
-  jq -s '.[0] * .[1] * .[2]' "${OPENCODE_CONFIG_FILE}" "${BASE_CONFIG_JSON}" "${MCP_FRAGMENT_FILE}" > "${MERGED_JSON}"
+  # Merge existing config with base config changes (port/hostname), then
+  # atomically replace the entire mcp section with the fragment using `+`.
+  # Using `+` (not `*`) for the mcp section avoids jq's recursive object
+  # merge, which would blend old stale MCP entries with new ones rather
+  # than replacing them cleanly.
+  jq -s '(.[0] * .[1]) + {"mcp": .[2].mcp}' "${OPENCODE_CONFIG_FILE}" "${BASE_CONFIG_JSON}" "${MCP_FRAGMENT_FILE}" > "${MERGED_JSON}"
 else
   if [[ -f "${OPENCODE_CONFIG_FILE}" ]]; then
     cp "${OPENCODE_CONFIG_FILE}" "${OPENCODE_CONFIG_FILE}.bak.invalid"
   fi
-  jq -s '.[0] * .[1]' "${BASE_CONFIG_JSON}" "${MCP_FRAGMENT_FILE}" > "${MERGED_JSON}"
+  jq -s '.[0] + {"mcp": .[1].mcp}' "${BASE_CONFIG_JSON}" "${MCP_FRAGMENT_FILE}" > "${MERGED_JSON}"
 fi
 
 mv "${MERGED_JSON}" "${OPENCODE_CONFIG_FILE}"
