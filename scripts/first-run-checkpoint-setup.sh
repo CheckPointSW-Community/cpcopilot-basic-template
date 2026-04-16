@@ -43,6 +43,44 @@ if [[ -t 0 && -t 1 ]]; then
   is_interactive=true
 fi
 
+read_masked_secret() {
+  local prompt_text="$1"
+  local result_var_name="$2"
+  local default_value="${3:-}"
+  local input_value=""
+  local char=""
+
+  if [[ -n "${default_value}" ]]; then
+    printf '%s [%s] ' "${prompt_text}" "${default_value}"
+  else
+    printf '%s ' "${prompt_text}"
+  fi
+
+  while IFS= read -r -s -n 1 char; do
+    if [[ "${char}" == $'\n' || "${char}" == $'\r' ]]; then
+      break
+    fi
+
+    if [[ "${char}" == $'\177' || "${char}" == $'\b' || "${char}" == $'\x7f' ]]; then
+      if [[ -n "${input_value}" ]]; then
+        input_value="${input_value%?}"
+        printf '\b \b'
+      fi
+      continue
+    fi
+
+    input_value+="${char}"
+    printf '*'
+  done
+  echo
+
+  if [[ -z "${input_value}" && -n "${default_value}" ]]; then
+    input_value="${default_value}"
+  fi
+
+  printf -v "${result_var_name}" '%s' "${input_value}"
+}
+
 prompt_if_missing() {
   local var_name="$1"
   local prompt_text="$2"
@@ -59,8 +97,7 @@ prompt_if_missing() {
   fi
 
   if [[ "${is_secret}" == "true" ]]; then
-    read -r -s -p "${prompt_text} " input_value
-    echo
+    read_masked_secret "${prompt_text}" input_value
   else
     if [[ -n "${default_value}" ]]; then
       read -r -p "${prompt_text} [${default_value}] " input_value
@@ -90,12 +127,9 @@ prompt_secret_with_default() {
 
   local input_value=""
   if [[ -n "${default_value}" ]]; then
-    read -r -s -p "${prompt_text} [${default_value}] " input_value
-    echo
-    input_value="${input_value:-${default_value}}"
+    read_masked_secret "${prompt_text}" input_value "${default_value}"
   else
-    read -r -s -p "${prompt_text} " input_value
-    echo
+    read_masked_secret "${prompt_text}" input_value
   fi
 
   printf -v "${var_name}" '%s' "${input_value}"
@@ -137,8 +171,7 @@ prompt_optional_secret() {
   fi
 
   local input_value=""
-  read -r -s -p "${prompt_text} " input_value
-  echo
+  read_masked_secret "${prompt_text}" input_value
   printf -v "${var_name}" '%s' "${input_value}"
 }
 
@@ -172,8 +205,8 @@ prompt_if_missing "CHECKPOINT_DOC_SECRET_KEY" "Documentation tool SECRET_KEY:" "
 prompt_with_default "CHECKPOINT_DOC_REGION" "Optional documentation REGION" "EU"
 prompt_if_missing "CHECKPOINT_DOC_AUTH_URL" "Optional documentation AUTH_URL (press Enter to skip):"
 
-prompt_with_default "OPENCODE_SERVER_USERNAME" "OpenCode web username" "${DEFAULT_OPENCODE_USERNAME}"
-prompt_secret_with_default "OPENCODE_SERVER_PASSWORD" "OpenCode web password" "${DEFAULT_OPENCODE_PASSWORD}"
+prompt_with_default "OPENCODE_SERVER_USERNAME" "OpenCode web user username" "${DEFAULT_OPENCODE_USERNAME}"
+prompt_secret_with_default "OPENCODE_SERVER_PASSWORD" "OpenCode web user password" "${DEFAULT_OPENCODE_PASSWORD}"
 prompt_with_default "OPENCODE_PORT" "Optional OpenCode web port" "4096"
 prompt_with_default "REPORTS_PORT" "Optional reports port" "8081"
 
