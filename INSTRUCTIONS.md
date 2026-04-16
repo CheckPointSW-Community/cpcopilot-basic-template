@@ -4,7 +4,7 @@ Welcome to the Check Point-focused OpenCode environment for Codespaces or local 
 
 ## What to do first
 
-1. Complete the guided setup shown in the terminal if prompted. This will ask you for the required values to connect to the Check Point management server and to configure the OpenCode and reports servers. If you have already set these values as Codespaces secrets, they will already be available to the setup script, so you may be able to continue with little or no input.
+1. Complete the guided setup shown in the terminal if prompted. This will ask you for the required values to connect to the Check Point management server and to configure the OpenCode and reports servers. The first management prompt accepts either an on-premises DNS/IP value or a Smart-1 Cloud URL. If you have already set these values as Codespaces secrets, they will already be available to the setup script, so you may be able to continue with little or no input.
 2. After setup finishes, OpenCode and the reports server start automatically for you in Codespaces.
 3. Open the Reports link shown in the terminal. It should be empty at first because you have not generated any reports yet.
 4. Open the OpenCode link shown in the terminal. By default, OpenCode starts without a login prompt. If you provided a non-empty OpenCode password during setup, log in with the credentials you configured (default username: `opencode`).
@@ -24,6 +24,7 @@ Here are some example prompts to try:
 - "Summarize threat-prevention profiles and exceptions, then identify coverage gaps by severity."
 - "Generate an HTML report in reports/ with findings, sources used, and next steps."
 - "List my Spark gateways and summarize any management or connectivity issues you find."
+- "Connect to my Smart-1 Cloud management URL and list the available policy layers."
 
 ## Tips
 

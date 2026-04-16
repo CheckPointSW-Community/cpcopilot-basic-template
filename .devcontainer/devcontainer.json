@@ -10,16 +10,19 @@
   "forwardPorts": [4096, 8081],
   "secrets": {
     "CHECKPOINT_MGMT_HOST": {
-      "description": "Check Point management DNS name or IP"
+      "description": "Check Point on-premises management DNS name or IP"
+    },
+    "CHECKPOINT_MGMT_URL": {
+      "description": "Optional Smart-1 Cloud management URL (for example, https://cloudinfra-gw-us.portal.checkpoint.com/your-tenant-id/web_api)"
     },
     "CHECKPOINT_API_KEY": {
-      "description": "Optional Check Point management API key; if blank the setup falls back to username/password"
+      "description": "Check Point management API key. Required for Smart-1 Cloud; optional for on-premises where setup can fall back to username/password"
     },
     "CHECKPOINT_USERNAME": {
-      "description": "Check Point management username"
+      "description": "Check Point on-premises management username"
     },
     "CHECKPOINT_PASSWORD": {
-      "description": "Check Point management password"
+      "description": "Check Point on-premises management password"
     },
     "CHECKPOINT_DOC_CLIENT_ID": {
       "description": "Client ID for the Check Point documentation MCP"

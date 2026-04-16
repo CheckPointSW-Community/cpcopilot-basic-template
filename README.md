@@ -4,6 +4,8 @@ The main purpose of this repository is to provide a ready-to-use environment for
 
 It uses the OpenCode tool as the foundation for the chat interface and agent management, and it includes a Check Point-focused agent with a set of skills for interacting with the Check Point MCP servers and documentation.
 
+It supports both traditional on-premises Check Point management servers and Smart-1 Cloud management.
+
 This environment works with:
 
 - GitHub Codespaces
@@ -61,16 +63,19 @@ Expected result:
 
 Collect the required values first.
 
-- `CHECKPOINT_MGMT_HOST`
 - Either:
-  - `CHECKPOINT_API_KEY`
+  - `CHECKPOINT_MGMT_HOST` for on-premises management
+  - or `CHECKPOINT_MGMT_URL` for Smart-1 Cloud
+- Authentication:
+  - Smart-1 Cloud requires `CHECKPOINT_API_KEY`
+  - on-premises can use `CHECKPOINT_API_KEY`
   - or `CHECKPOINT_USERNAME` + `CHECKPOINT_PASSWORD`
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
 
 Optional values if you need to override defaults:
 
-- `CHECKPOINT_MGMT_PORT` (default `443`)
+- `CHECKPOINT_MGMT_PORT` (default `443`, on-premises only)
 - `CHECKPOINT_DOC_REGION` (default `EU`)
 - `CHECKPOINT_DOC_AUTH_URL`
 - `OPENCODE_SERVER_USERNAME` (default `opencode`)
@@ -95,6 +100,12 @@ Log into a Debian/Ubuntu machine with Internet access and follow the instruction
 8. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for more detailed instructions and troubleshooting.
 
 Outside Codespaces, the startup scripts prefer the machine's local network IP and fall back to `localhost` when needed.
+
+## Smart-1 Cloud notes
+
+- In guided setup, the first management prompt accepts either an on-premises DNS/IP value or a Smart-1 Cloud URL.
+- If a Smart-1 Cloud URL is detected, setup requires `CHECKPOINT_API_KEY` and skips the on-premises username/password and port prompts.
+- Example Smart-1 Cloud URL: `https://cloudinfra-gw-us.portal.checkpoint.com/your-tenant-id/web_api`
 
 ## What this repository includes
 

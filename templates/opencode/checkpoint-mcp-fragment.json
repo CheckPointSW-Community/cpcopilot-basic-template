@@ -6,6 +6,7 @@
       "enabled": true,
       "command": ["{env:HOME}/.local/npm-global/bin/quantum-management-mcp"],
       "environment": {
+        "S1C_URL": "{env:CHECKPOINT_MGMT_URL}",
         "MANAGEMENT_HOST": "{env:CHECKPOINT_MGMT_HOST}",
         "MANAGEMENT_PORT": "{env:CHECKPOINT_MGMT_PORT}",
         "API_KEY": "{env:CHECKPOINT_API_KEY}",
@@ -18,6 +19,7 @@
       "enabled": true,
       "command": ["{env:HOME}/.local/npm-global/bin/management-logs-mcp"],
       "environment": {
+        "S1C_URL": "{env:CHECKPOINT_MGMT_URL}",
         "MANAGEMENT_HOST": "{env:CHECKPOINT_MGMT_HOST}",
         "MANAGEMENT_PORT": "{env:CHECKPOINT_MGMT_PORT}",
         "API_KEY": "{env:CHECKPOINT_API_KEY}",
@@ -30,6 +32,7 @@
       "enabled": true,
       "command": ["{env:HOME}/.local/npm-global/bin/threat-prevention-mcp"],
       "environment": {
+        "S1C_URL": "{env:CHECKPOINT_MGMT_URL}",
         "MANAGEMENT_HOST": "{env:CHECKPOINT_MGMT_HOST}",
         "MANAGEMENT_PORT": "{env:CHECKPOINT_MGMT_PORT}",
         "API_KEY": "{env:CHECKPOINT_API_KEY}",
@@ -42,6 +45,7 @@
       "enabled": true,
       "command": ["{env:HOME}/.local/npm-global/bin/https-inspection-mcp"],
       "environment": {
+        "S1C_URL": "{env:CHECKPOINT_MGMT_URL}",
         "MANAGEMENT_HOST": "{env:CHECKPOINT_MGMT_HOST}",
         "MANAGEMENT_PORT": "{env:CHECKPOINT_MGMT_PORT}",
         "API_KEY": "{env:CHECKPOINT_API_KEY}",

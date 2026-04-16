@@ -25,6 +25,7 @@ if [[ -f "${USER_ENV_FILE}" ]]; then
 fi
 
 CHECKPOINT_MGMT_HOST="${CHECKPOINT_MGMT_HOST:-}"
+CHECKPOINT_MGMT_URL="${CHECKPOINT_MGMT_URL:-}"
 CHECKPOINT_API_KEY="${CHECKPOINT_API_KEY:-}"
 CHECKPOINT_USERNAME="${CHECKPOINT_USERNAME:-}"
 CHECKPOINT_PASSWORD="${CHECKPOINT_PASSWORD:-}"
@@ -42,6 +43,25 @@ is_interactive=false
 if [[ -t 0 && -t 1 ]]; then
   is_interactive=true
 fi
+
+is_smart1_cloud_url() {
+  local candidate="$1"
+  [[ "${candidate}" =~ ^https?:// ]]
+}
+
+normalize_management_endpoint() {
+  if [[ -z "${CHECKPOINT_MGMT_URL}" && -n "${CHECKPOINT_MGMT_HOST}" ]] && is_smart1_cloud_url "${CHECKPOINT_MGMT_HOST}"; then
+    CHECKPOINT_MGMT_URL="${CHECKPOINT_MGMT_HOST}"
+  fi
+
+  if [[ -n "${CHECKPOINT_MGMT_URL}" ]]; then
+    CHECKPOINT_MGMT_URL="${CHECKPOINT_MGMT_URL%/}"
+    CHECKPOINT_MGMT_HOST=""
+    CHECKPOINT_MGMT_PORT=""
+    CHECKPOINT_USERNAME=""
+    CHECKPOINT_PASSWORD=""
+  fi
+}
 
 read_masked_secret() {
   local prompt_text="$1"
@@ -173,21 +193,30 @@ write_env_line() {
   printf '\n'
 }
 
-prompt_if_missing "CHECKPOINT_MGMT_HOST" "Check Point management host (DNS/IP):"
-prompt_with_default "CHECKPOINT_MGMT_PORT" "Optional Check Point management port" "443"
-prompt_optional_secret "CHECKPOINT_API_KEY" "Check Point management API key (press Enter to use username/password instead):"
-
-if [[ -z "${CHECKPOINT_API_KEY}" ]]; then
-  prompt_if_missing "CHECKPOINT_USERNAME" "Check Point username:" "${DEFAULT_CHECKPOINT_USERNAME}"
-  prompt_secret_with_default "CHECKPOINT_PASSWORD" "Check Point password" "${DEFAULT_CHECKPOINT_PASSWORD}"
+if [[ -z "${CHECKPOINT_MGMT_HOST}" && -z "${CHECKPOINT_MGMT_URL}" ]]; then
+  prompt_if_missing "CHECKPOINT_MGMT_HOST" "Check Point management endpoint (DNS/IP or Smart-1 Cloud URL):"
 fi
 
-if [[ -z "${CHECKPOINT_USERNAME}" ]]; then
-  CHECKPOINT_USERNAME="${DEFAULT_CHECKPOINT_USERNAME}"
-fi
+normalize_management_endpoint
 
-if [[ -z "${CHECKPOINT_API_KEY}" && -z "${CHECKPOINT_PASSWORD}" ]]; then
-  CHECKPOINT_PASSWORD="${DEFAULT_CHECKPOINT_PASSWORD}"
+if [[ -n "${CHECKPOINT_MGMT_URL}" ]]; then
+  prompt_if_missing "CHECKPOINT_API_KEY" "Check Point Smart-1 Cloud API key:" "" true
+else
+  prompt_with_default "CHECKPOINT_MGMT_PORT" "Optional Check Point management port" "443"
+  prompt_optional_secret "CHECKPOINT_API_KEY" "Check Point management API key (press Enter to use username/password instead):"
+
+  if [[ -z "${CHECKPOINT_API_KEY}" ]]; then
+    prompt_if_missing "CHECKPOINT_USERNAME" "Check Point username:" "${DEFAULT_CHECKPOINT_USERNAME}"
+    prompt_secret_with_default "CHECKPOINT_PASSWORD" "Check Point password" "${DEFAULT_CHECKPOINT_PASSWORD}"
+  fi
+
+  if [[ -z "${CHECKPOINT_USERNAME}" ]]; then
+    CHECKPOINT_USERNAME="${DEFAULT_CHECKPOINT_USERNAME}"
+  fi
+
+  if [[ -z "${CHECKPOINT_API_KEY}" && -z "${CHECKPOINT_PASSWORD}" ]]; then
+    CHECKPOINT_PASSWORD="${DEFAULT_CHECKPOINT_PASSWORD}"
+  fi
 fi
 
 prompt_if_missing "CHECKPOINT_DOC_CLIENT_ID" "Documentation tool CLIENT_ID:"
@@ -206,6 +235,7 @@ cat <<EOF
 # File permissions are restricted and this file is intentionally not tracked by git.
 EOF
 write_env_line "CHECKPOINT_MGMT_HOST" "${CHECKPOINT_MGMT_HOST}"
+write_env_line "CHECKPOINT_MGMT_URL" "${CHECKPOINT_MGMT_URL}"
 write_env_line "CHECKPOINT_API_KEY" "${CHECKPOINT_API_KEY}"
 write_env_line "CHECKPOINT_USERNAME" "${CHECKPOINT_USERNAME}"
 write_env_line "CHECKPOINT_PASSWORD" "${CHECKPOINT_PASSWORD}"
@@ -246,12 +276,20 @@ fi
 mv "${MERGED_JSON}" "${OPENCODE_CONFIG_FILE}"
 
 setup_complete=true
-if [[ -z "${CHECKPOINT_MGMT_HOST}" || -z "${CHECKPOINT_DOC_CLIENT_ID}" || -z "${CHECKPOINT_DOC_SECRET_KEY}" ]]; then
+if [[ -z "${CHECKPOINT_MGMT_HOST}" && -z "${CHECKPOINT_MGMT_URL}" ]]; then
   setup_complete=false
 fi
 
-if [[ -z "${CHECKPOINT_API_KEY}" && ( -z "${CHECKPOINT_USERNAME}" || -z "${CHECKPOINT_PASSWORD}" ) ]]; then
+if [[ -z "${CHECKPOINT_DOC_CLIENT_ID}" || -z "${CHECKPOINT_DOC_SECRET_KEY}" ]]; then
   setup_complete=false
+fi
+
+if [[ -n "${CHECKPOINT_MGMT_URL}" ]]; then
+  if [[ -z "${CHECKPOINT_API_KEY}" ]]; then
+    setup_complete=false
+  fi
+elif [[ -z "${CHECKPOINT_API_KEY}" && ( -z "${CHECKPOINT_USERNAME}" || -z "${CHECKPOINT_PASSWORD}" ) ]]; then
+    setup_complete=false
 fi
 
 redact() {
@@ -278,11 +316,13 @@ EOF
 
 echo ""
 echo "===== Check Point OpenCode Setup Summary (redacted) ====="
-echo "Management auth mode     : $( [[ -n "${CHECKPOINT_API_KEY}" ]] && echo "api-key" || echo "username/password" )"
-echo "Management host         : $(redact "${CHECKPOINT_MGMT_HOST}")"
+echo "Management mode         : $( [[ -n "${CHECKPOINT_MGMT_URL}" ]] && echo "smart-1-cloud" || echo "on-premises" )"
+echo "Management auth mode    : $( if [[ -n "${CHECKPOINT_MGMT_URL}" ]]; then echo "api-key"; elif [[ -n "${CHECKPOINT_API_KEY}" ]]; then echo "api-key"; else echo "username/password"; fi )"
+echo "Management endpoint     : $(redact "${CHECKPOINT_MGMT_URL:-${CHECKPOINT_MGMT_HOST}}")"
+echo "Management port         : $( [[ -n "${CHECKPOINT_MGMT_URL}" ]] && echo "<not used>" || redact "${CHECKPOINT_MGMT_PORT}" )"
 echo "Management API key      : $(redact "${CHECKPOINT_API_KEY}")"
-echo "Management username     : $(redact "${CHECKPOINT_USERNAME}")"
-echo "Management password     : $(redact "${CHECKPOINT_PASSWORD}")"
+echo "Management username     : $( [[ -n "${CHECKPOINT_MGMT_URL}" ]] && echo "<not used>" || redact "${CHECKPOINT_USERNAME}" )"
+echo "Management password     : $( [[ -n "${CHECKPOINT_MGMT_URL}" ]] && echo "<not used>" || redact "${CHECKPOINT_PASSWORD}" )"
 echo "Doc CLIENT_ID           : $(redact "${CHECKPOINT_DOC_CLIENT_ID}")"
 echo "Doc SECRET_KEY          : $(redact "${CHECKPOINT_DOC_SECRET_KEY}")"
 echo "Doc REGION              : $(redact "${CHECKPOINT_DOC_REGION}")"
@@ -295,6 +335,9 @@ echo "Setup complete          : ${setup_complete}"
 
 echo ""
 if [[ "${setup_complete}" != "true" ]]; then
+  if [[ -n "${CHECKPOINT_MGMT_URL}" && -z "${CHECKPOINT_API_KEY}" ]]; then
+    echo "[setup] Smart-1 Cloud mode requires CHECKPOINT_API_KEY."
+  fi
   echo "[setup] Setup is incomplete. Add the missing environment values and re-run: bash scripts/first-run-checkpoint-setup.sh"
 fi
 

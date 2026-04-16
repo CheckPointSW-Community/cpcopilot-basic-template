@@ -64,10 +64,11 @@ The configured Check Point MCP set also includes `spark-management`, which reuse
 
 Provide these via Codespaces secrets:
 
-- `CHECKPOINT_MGMT_HOST`
-- `CHECKPOINT_API_KEY` (optional; preferred when available)
-- `CHECKPOINT_USERNAME` (used when `CHECKPOINT_API_KEY` is blank)
-- `CHECKPOINT_PASSWORD` (used when `CHECKPOINT_API_KEY` is blank)
+- `CHECKPOINT_MGMT_HOST` (for on-premises management)
+- `CHECKPOINT_MGMT_URL` (for Smart-1 Cloud management)
+- `CHECKPOINT_API_KEY` (required for Smart-1 Cloud; optional and preferred when available for on-premises)
+- `CHECKPOINT_USERNAME` (used for on-premises management when `CHECKPOINT_API_KEY` is blank)
+- `CHECKPOINT_PASSWORD` (used for on-premises management when `CHECKPOINT_API_KEY` is blank)
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
 - `OPENCODE_SERVER_USERNAME` (defaults to `opencode` during guided setup)
@@ -82,8 +83,8 @@ On start, `scripts/first-run-checkpoint-setup.sh`:
 1. loads values from environment and prior user-scoped setup
 2. detects missing mandatory values
 3. prompts interactively when possible
-4. asks for a Check Point API key first; when left blank it falls back to username/password
-5. prompts for optional management/doc/port settings using the same env names as the template
+4. asks for a generic Check Point management endpoint first; this accepts either an on-premises DNS/IP value or a Smart-1 Cloud URL
+5. if a Smart-1 Cloud URL is detected, it requires an API key and skips the on-premises username/password and port prompts
 6. defaults the Check Point username suggestion to `admin`
 7. defaults the OpenCode username to `opencode`
 8. defaults the Check Point password to `demo123`, and leaves the OpenCode password blank to disable Web UI auth unless explicitly set
