@@ -27,9 +27,9 @@ The easiest way to use this repository for a demo is to use Check Point SmartCon
 
 **WARNING!** You can also use your own Check Point lab environment if you have one available, but the default setup in this environment will use free tools and models and may expose your data to the model provider, so please be careful and consider the implications before connecting a production environment or sensitive data.
 
-You will also need to create a free Check Point documentation tool service account to get the required client ID and secret key for documentation lookups.
+You will also need to create a free service account for the Check Point documentation tool to get the required client ID and secret key for documentation lookups.
 
-Those same documentation portal credentials are also used by the Spark Management MCP server, so no extra interactive setup is required for Spark support.
+Those same documentation portal credentials are also used by the Spark Management MCP server, so Spark support does not require any additional interactive setup.
 
 1. Navigate to https://portal.checkpoint.com/ and log in with your account.
 2. Select an account/tenant where you are an administrator.
@@ -98,7 +98,7 @@ Outside Codespaces, the startup scripts prefer the machine's local network IP an
 
 ## What this repository includes
 
-- OpenCode web on port `4096`
+- OpenCode Web UI on port `4096`
 - reports server on port `8081`
 - Check Point MCP packages:
   - `@chkp/quantum-management-mcp`
