@@ -77,7 +77,7 @@ try:
     sys.stderr.flush()
 
     tty.setraw(fd)
-  raw_enabled = True
+    raw_enabled = True
 
     while True:
         char = os.read(fd, 1)
@@ -115,8 +115,8 @@ try:
             sys.stderr.write('*')
             sys.stderr.flush()
 
-      termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-      raw_enabled = False
+    termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    raw_enabled = False
     sys.stderr.write('\n')
     sys.stderr.flush()
 
@@ -126,7 +126,7 @@ try:
 
     sys.stdout.write(value)
 finally:
-      if raw_enabled:
+    if raw_enabled:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     if tty_in is not sys.stdin:
         tty_in.close()
