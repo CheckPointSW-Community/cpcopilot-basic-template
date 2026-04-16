@@ -233,7 +233,11 @@ if [[ -n "${CHECKPOINT_MGMT_URL}" ]]; then
   prompt_if_missing "CHECKPOINT_API_KEY" "Check Point Smart-1 Cloud API key:" "" true
 else
   prompt_with_default "CHECKPOINT_MGMT_PORT" "Optional Check Point management port" "443"
-  prompt_optional_secret "CHECKPOINT_API_KEY" "Check Point management API key (press Enter to use username/password instead):"
+  if [[ -n "${CHECKPOINT_API_KEY}" ]]; then
+    prompt_optional_secret "CHECKPOINT_API_KEY" "Check Point management API key (press Enter to keep; clear to switch to username/password):"
+  else
+    prompt_optional_secret "CHECKPOINT_API_KEY" "Check Point management API key (press Enter to use username/password instead):"
+  fi
 
   if [[ -z "${CHECKPOINT_API_KEY}" ]]; then
     prompt_if_missing "CHECKPOINT_USERNAME" "Check Point username:" "${DEFAULT_CHECKPOINT_USERNAME}"
@@ -252,7 +256,11 @@ fi
 prompt_if_missing "CHECKPOINT_DOC_CLIENT_ID" "Documentation tool CLIENT_ID:"
 prompt_if_missing "CHECKPOINT_DOC_SECRET_KEY" "Documentation tool SECRET_KEY:" "" true
 prompt_with_default "CHECKPOINT_DOC_REGION" "Optional documentation REGION" "EU"
-prompt_if_missing "CHECKPOINT_DOC_AUTH_URL" "Optional documentation AUTH_URL (press Enter to skip):"
+if [[ -n "${CHECKPOINT_DOC_AUTH_URL}" ]]; then
+  prompt_if_missing "CHECKPOINT_DOC_AUTH_URL" "Optional documentation AUTH_URL (press Enter to keep; clear to remove):"
+else
+  prompt_if_missing "CHECKPOINT_DOC_AUTH_URL" "Optional documentation AUTH_URL (press Enter to skip):"
+fi
 
 prompt_with_default "OPENCODE_SERVER_USERNAME" "OpenCode web user username" "${DEFAULT_OPENCODE_USERNAME}"
 if [[ -n "${OPENCODE_SERVER_PASSWORD}" ]]; then
