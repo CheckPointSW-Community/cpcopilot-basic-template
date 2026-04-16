@@ -255,7 +255,11 @@ prompt_with_default "CHECKPOINT_DOC_REGION" "Optional documentation REGION" "EU"
 prompt_if_missing "CHECKPOINT_DOC_AUTH_URL" "Optional documentation AUTH_URL (press Enter to skip):"
 
 prompt_with_default "OPENCODE_SERVER_USERNAME" "OpenCode web user username" "${DEFAULT_OPENCODE_USERNAME}"
-prompt_secret_with_default "OPENCODE_SERVER_PASSWORD" "OpenCode web user password (press Enter to disable auth)" "${DEFAULT_OPENCODE_PASSWORD}"
+if [[ -n "${OPENCODE_SERVER_PASSWORD}" ]]; then
+  prompt_secret_with_default "OPENCODE_SERVER_PASSWORD" "OpenCode web user password (press Enter to clear and disable auth)"
+else
+  prompt_secret_with_default "OPENCODE_SERVER_PASSWORD" "OpenCode web user password (press Enter to disable auth)" "${DEFAULT_OPENCODE_PASSWORD}"
+fi
 prompt_with_default "OPENCODE_PORT" "Optional OpenCode web port" "4096"
 prompt_with_default "REPORTS_PORT" "Optional reports port" "8081"
 
