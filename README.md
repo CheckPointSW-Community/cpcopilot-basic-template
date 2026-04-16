@@ -1,11 +1,15 @@
 # Check Point OpenCode Copilot
 
-Check Point-focused OpenCode environment for:
+The main purpose of this repository is to provide a ready-to-use environment for easily demonstrating the value of the Check Point MCP servers, while also providing a small framework for building a basic AI copilot for any Check Point environment.
+
+It uses the OpenCode tool as the foundation for the chat interface and agent management, and it includes a Check Point-focused agent with a set of skills for interacting with the Check Point MCP servers and documentation.
+
+This environment works with:
 
 - GitHub Codespaces
 - native Debian/Ubuntu machines or VMs
 
-It starts OpenCode web, installs the Check Point MCP tools, provides a Check Point-focused agent/skills set, and serves HTML reports from `reports/`.
+It starts the OpenCode Web UI, installs the Check Point MCP tools, provides a Check Point-focused agent and skill set, and runs a web server for HTML reports created by OpenCode agents.
 
 
 ## Before you start

@@ -17,9 +17,9 @@ Welcome to the Check Point-focused OpenCode environment for Codespaces or local 
 Here are some example prompts to try:
 
 - "List access policy layers"
+- "Why can't users in InternalZone access applications at www.block.com?"
 - "Review the rules in the Datacenter layer and evaluate PCI 4.0 compliance. Create a detailed HTML report with findings and recommendations."
 - "Inspect access policy for broad allow rules and summarize top risk findings."
-- "Investigate drops to 192.168.0.0/16 over the last 24h and identify likely root causes."
 - "Summarize threat-prevention profiles and exceptions, then identify coverage gaps by severity."
 - "Generate an HTML report in reports/ with findings, sources used, and next steps."
 
