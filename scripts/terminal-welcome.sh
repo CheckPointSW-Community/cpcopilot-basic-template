@@ -75,6 +75,8 @@ bash "${REPO_ROOT}/scripts/validate-environment.sh" --quick || true
 echo ""
 echo "- OpenCode UI    : ${OPENCODE_URL}"
 echo "- Reports        : ${REPORTS_URL}"
+echo "- Stop services  : bash scripts/stop-services.sh"
+echo "- Restart        : bash scripts/restart-services.sh"
 if [[ -n "${CODESPACE_NAME:-}" && -n "${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-}" ]]; then
   echo "- Ports tip      : these forwarded URLs were derived from CODESPACE_NAME and GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"
 else
