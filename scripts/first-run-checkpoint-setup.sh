@@ -102,26 +102,37 @@ prompt_if_missing() {
   local is_secret="${4:-false}"
 
   local current_value="${!var_name:-}"
-  if [[ -n "${current_value}" ]]; then
-    return
-  fi
 
   if [[ "${is_interactive}" != "true" ]]; then
+    if [[ -z "${current_value}" && -n "${default_value}" ]]; then
+      printf -v "${var_name}" '%s' "${default_value}"
+    fi
     return
   fi
 
   if [[ "${is_secret}" == "true" ]]; then
-    read_masked_secret "${prompt_text}" input_value
+    local input_value=""
+    if [[ -n "${current_value}" ]]; then
+      read_masked_secret "${prompt_text} [existing - press Enter to keep]" input_value
+      if [[ -z "${input_value}" ]]; then
+        input_value="${current_value}"
+      fi
+    elif [[ -n "${default_value}" ]]; then
+      read_masked_secret "${prompt_text}" input_value "${default_value}"
+    else
+      read_masked_secret "${prompt_text}" input_value
+    fi
+    printf -v "${var_name}" '%s' "${input_value}"
   else
-    if [[ -n "${default_value}" ]]; then
-      read -r -p "${prompt_text} [${default_value}] " input_value
-      input_value="${input_value:-${default_value}}"
+    local effective_default="${current_value:-${default_value}}"
+    if [[ -n "${effective_default}" ]]; then
+      read -r -p "${prompt_text} [${effective_default}] " input_value
+      input_value="${input_value:-${effective_default}}"
     else
       read -r -p "${prompt_text} " input_value
     fi
+    printf -v "${var_name}" '%s' "${input_value}"
   fi
-
-  printf -v "${var_name}" '%s' "${input_value}"
 }
 
 prompt_secret_with_default() {
@@ -130,17 +141,21 @@ prompt_secret_with_default() {
   local default_value="${3:-}"
 
   local current_value="${!var_name:-}"
-  if [[ -n "${current_value}" ]]; then
-    return
-  fi
 
   if [[ "${is_interactive}" != "true" ]]; then
-    printf -v "${var_name}" '%s' "${default_value}"
+    if [[ -z "${current_value}" ]]; then
+      printf -v "${var_name}" '%s' "${default_value}"
+    fi
     return
   fi
 
   local input_value=""
-  if [[ -n "${default_value}" ]]; then
+  if [[ -n "${current_value}" ]]; then
+    read_masked_secret "${prompt_text} [existing - press Enter to keep]" input_value
+    if [[ -z "${input_value}" ]]; then
+      input_value="${current_value}"
+    fi
+  elif [[ -n "${default_value}" ]]; then
     read_masked_secret "${prompt_text}" input_value "${default_value}"
   else
     read_masked_secret "${prompt_text}" input_value
@@ -155,19 +170,19 @@ prompt_with_default() {
   local default_value="${3:-}"
 
   local current_value="${!var_name:-}"
-  if [[ -n "${current_value}" ]]; then
-    return
-  fi
 
   if [[ "${is_interactive}" != "true" ]]; then
-    printf -v "${var_name}" '%s' "${default_value}"
+    if [[ -z "${current_value}" ]]; then
+      printf -v "${var_name}" '%s' "${default_value}"
+    fi
     return
   fi
 
+  local effective_default="${current_value:-${default_value}}"
   local input_value=""
-  if [[ -n "${default_value}" ]]; then
-    read -r -p "${prompt_text} [${default_value}] " input_value
-    input_value="${input_value:-${default_value}}"
+  if [[ -n "${effective_default}" ]]; then
+    read -r -p "${prompt_text} [${effective_default}] " input_value
+    input_value="${input_value:-${effective_default}}"
   else
     read -r -p "${prompt_text} " input_value
   fi
@@ -180,12 +195,21 @@ prompt_optional_secret() {
   local prompt_text="$2"
 
   local current_value="${!var_name:-}"
-  if [[ -n "${current_value}" || "${is_interactive}" != "true" ]]; then
+
+  if [[ "${is_interactive}" != "true" ]]; then
     return
   fi
 
   local input_value=""
-  read_masked_secret "${prompt_text}" input_value
+  if [[ -n "${current_value}" ]]; then
+    read_masked_secret "${prompt_text} [existing - press Enter to keep]" input_value
+    if [[ -z "${input_value}" ]]; then
+      input_value="${current_value}"
+    fi
+  else
+    read_masked_secret "${prompt_text}" input_value
+  fi
+
   printf -v "${var_name}" '%s' "${input_value}"
 }
 
