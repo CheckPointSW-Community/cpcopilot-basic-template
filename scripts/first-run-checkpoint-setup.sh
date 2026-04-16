@@ -47,27 +47,28 @@ read_masked_secret() {
   local prompt_text="$1"
   local result_var_name="$2"
   local default_value="${3:-}"
-  local input_value=""
+  local captured_value=""
   local status=0
 
-  if ! input_value="$(python3 "${REPO_ROOT}/scripts/lib/masked_prompt.py" "${prompt_text}" "${default_value}")"; then
-    status=$?
+  captured_value="$(python3 "${REPO_ROOT}/scripts/lib/masked_prompt.py" "${prompt_text}" "${default_value}")" || status=$?
+
+  if [[ ${status} -ne 0 ]]; then
     if [[ ${status} -eq 130 ]]; then
       return ${status}
     fi
 
     if [[ -n "${default_value}" ]]; then
-      input_value="${default_value}"
+      captured_value="${default_value}"
     else
       return ${status}
     fi
   fi
 
-  if [[ -z "${input_value}" && -n "${default_value}" ]]; then
-    input_value="${default_value}"
+  if [[ -z "${captured_value}" && -n "${default_value}" ]]; then
+    captured_value="${default_value}"
   fi
 
-  printf -v "${result_var_name}" '%s' "${input_value}"
+  printf -v "${result_var_name}" '%s' "${captured_value}"
 }
 
 prompt_if_missing() {
