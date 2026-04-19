@@ -1,6 +1,6 @@
 # Check Point OpenCode Copilot
 
-The main purpose of this repository is to provide a ready-to-use environment for easily demonstrating the value of the Check Point MCP servers, while also providing a small framework for building a basic AI copilot for any Check Point environment.
+The main purpose of this repository is to provide a ready-to-use environment for demonstrating the value of the Check Point MCP servers, while also providing a small framework for building a basic AI copilot for any Check Point environment.
 
 It uses the OpenCode tool as the foundation for the chat interface and agent management, and it includes a Check Point-focused agent with a set of skills for interacting with the Check Point MCP servers and documentation.
 
@@ -22,7 +22,7 @@ See [EU-AI-SOFTWARE-NOTICE.md](EU-AI-SOFTWARE-NOTICE.md) for practical EU-facing
 
 The easiest way to use this repository for a demo is to use Check Point SmartConsole in "Demo Mode" with the public demo server.
 
-1. Open the latest version of SmartConsole and select "Demo Mode".
+1. Open the latest version of Check Point SmartConsole and select "Demo Mode".
 2. Click "Next" to start a new demo session or use an existing one.
 3. Click "Login" to enter the demo environment.
 4. Once logged in, you can access the Check Point management server details from the middle of the dark bar at the bottom of SmartConsole by clicking "Cloud Demo Server". Then select "Demo Server Information" to copy the server IP address or DNS name.
@@ -35,7 +35,7 @@ The easiest way to use this repository for a demo is to use Check Point SmartCon
 
 You will also need to create a free service account for the Check Point documentation tool to get the required client ID and secret key for documentation lookups.
 
-Those same documentation portal credentials are also used by the Spark Management MCP server, so Spark support does not require any additional interactive setup.
+Those same documentation portal credentials are also used by the Spark Management MCP server, so Spark support does not require any additional setup.
 
 1. Navigate to https://portal.checkpoint.com/ and log in with your account.
 2. Select an account/tenant where you are an administrator.
@@ -52,7 +52,7 @@ More details can be found here: https://github.com/CheckPointSW/mcp-servers/tree
 ### Start it
 
 1. If you want to use Codespaces secrets, add the required values before creating the Codespace, as explained below.
-   - If you do not know what Codespaces secrets are, you can enter the values during guided setup instead and skip this step.
+   - If you do not know what Codespaces secrets are, read below, or enter the values during guided setup instead and skip this step.
 2. Create a new Codespace from this repository using the green "Use this template" button in the top-right corner, then click "Open in Codespaces".
 3. Wait 2–3 minutes for the Codespace to initialize.
 4. When the Codespace is ready, follow the instructions in [INSTRUCTIONS.md](INSTRUCTIONS.md), which are shown in the main Codespace view, for the next steps.
@@ -64,6 +64,11 @@ Expected result:
 - setup status shows `complete`
 
 ### If you want to create variables within Codespaces
+
+GitHub Codespaces supports encrypted secrets that can be used as environment variables in your Codespace. This is a good option if you want to avoid entering credentials during guided setup or if you want to keep them stored securely in GitHub.
+
+See the GitHub documentation for details:
+https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces
 
 Collect the required values first.
 
@@ -91,9 +96,12 @@ Optional values if you need to override defaults:
 
 Log into a Debian/Ubuntu machine with Internet access and follow the instructions below.
 
+If Git is not already installed, see https://github.com/git-guides/install-git or https://git-scm.com/install/linux.
+
 ### Start it
 
 1. Clone this repository onto a current Debian/Ubuntu machine.
+  - `git clone https://github.com/CheckPointSW-Community/cpcopilot-basic-template.git && cd cpcopilot-basic-template`  
 2. Run:
    - `bash scripts/bootstrap-local-debian.sh`
 3. Complete the guided setup if prompted.
