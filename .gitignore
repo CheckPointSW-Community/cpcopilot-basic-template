@@ -14,3 +14,4 @@ __pycache__/
 
 # OpenCode local/runtime files
 # Keep project-shared agent/config definitions in .opencode under source control.
+.codex
