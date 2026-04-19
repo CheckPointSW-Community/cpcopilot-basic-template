@@ -107,7 +107,8 @@ If Git is not already installed, see https://github.com/git-guides/install-git o
 3. Complete the guided setup if prompted.
 4. Open the OpenCode URL printed by the script.
 5. Open the Reports URL printed by the script.
-6. In OpenCode, select the session for this repository if prompted.
+6. In OpenCode, make sure to select the session and folder for this repository, even when not prompted.
+  - If the `CheckPoint-copilot` agent is visible and active in the lower-left corner of the OpenCode Web UI, you are in the right folder and session. If not, open the folder list from the top-left `...` menu and select the session with the path to this repository.
 7. Ask the `CheckPoint-copilot` agent questions or request reports about your Check Point environment, policies, logs, threat prevention, HTTPS inspection, and documentation, or just start with a simple "hey" to confirm that it's working.
 8. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for more detailed instructions and troubleshooting.
 
@@ -122,7 +123,7 @@ Outside Codespaces, the startup scripts prefer the machine's local network IP an
 ## What this repository includes
 
 - OpenCode Web UI on port `4096`
-- reports server on port `8081`
+- Reports server on port `8081`
 - Check Point MCP packages:
   - `@chkp/quantum-management-mcp`
   - `@chkp/spark-management-mcp`
