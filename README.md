@@ -102,15 +102,14 @@ If Git is not already installed, see https://github.com/git-guides/install-git o
 
 1. Clone this repository onto a current Debian/Ubuntu machine.
   - `git clone https://github.com/CheckPointSW-Community/cpcopilot-basic-template.git && cd cpcopilot-basic-template`  
-2. Run:
-   - `bash scripts/bootstrap-local-debian.sh`
+2. Run: `bash scripts/bootstrap-local-debian.sh`
 3. Complete the guided setup if prompted.
 4. Open the OpenCode URL printed by the script.
 5. Open the Reports URL printed by the script.
 6. In OpenCode, make sure to select the session and folder for this repository, even when not prompted.
   - If the `CheckPoint-copilot` agent is visible and active in the lower-left corner of the OpenCode Web UI, you are in the right folder and session. If not, open the folder list from the top-left `...` menu and select the session with the path to this repository.
 7. Ask the `CheckPoint-copilot` agent questions or request reports about your Check Point environment, policies, logs, threat prevention, HTTPS inspection, and documentation, or just start with a simple "hey" to confirm that it's working.
-8. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for more detailed instructions and troubleshooting.
+8. See [INSTRUCTIONS.md](INSTRUCTIONS.md) for example prompts and tips.
 
 Outside Codespaces, the startup scripts prefer the machine's local network IP and fall back to `localhost` when needed.
 
