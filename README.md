@@ -57,15 +57,13 @@ More details can be found here: https://github.com/CheckPointSW/mcp-servers/tree
 3. Wait 2–3 minutes for the Codespace to initialize.
 4. When the Codespace is ready, follow the instructions in [INSTRUCTIONS.md](INSTRUCTIONS.md), which are shown in the main Codespace view, for the next steps.
 
-Expected result:
-
-- OpenCode is reachable
-- reports index is reachable
-- setup status shows `complete`
 
 ### If you want to create variables within Codespaces
 
 GitHub Codespaces supports encrypted secrets that can be used as environment variables in your Codespace. This is a good option if you want to avoid entering credentials during guided setup or if you want to keep them stored securely in GitHub.
+
+You can create Codespaces secrets here:
+https://github.com/settings/codespaces/secrets/new
 
 See the GitHub documentation for details:
 https://docs.github.com/en/codespaces/managing-your-codespaces/managing-your-account-specific-secrets-for-github-codespaces
