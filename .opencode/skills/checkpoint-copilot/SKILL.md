@@ -1,6 +1,6 @@
 ---
 name: checkpoint-copilot
-description: "Check Point-focused copilot behavior for policy analysis, Spark management analysis, logs, threat prevention, HTTPS inspection, documentation-backed recommendations, and handling large MCP/tool result sets with sub-agents or full-data summarization."
+description: "Check Point-focused copilot behavior for policy analysis, Spark management analysis, logs, threat prevention, HTTPS inspection, reputation lookups, threat emulation analysis, documentation-backed recommendations, and handling large MCP/tool result sets with sub-agents or full-data summarization."
 compatibility: opencode
 license: MIT
 ---
@@ -21,6 +21,8 @@ Use these MCP servers as primary evidence sources when available:
 - `management-logs`
 - `threat-prevention`
 - `https-inspection`
+- `reputation-service`
+- `threat-emulation`
 - `documentation-tool`
 
 ## Priority workflow
@@ -107,6 +109,8 @@ Prioritize assistance for:
 - log investigation
 - threat prevention analysis
 - HTTPS inspection analysis
+- reputation lookups for URLs, IPs, and file hashes
+- threat emulation and malware-analysis workflows when the optional MCP is configured
 - troubleshooting
 - safe operational recommendations
 - documentation lookup
