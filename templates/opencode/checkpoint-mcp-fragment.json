@@ -53,6 +53,22 @@
         "PASSWORD": "{env:CHECKPOINT_PASSWORD}"
       }
     },
+    "reputation-service": {
+      "type": "local",
+      "enabled": false,
+      "command": ["{env:HOME}/.local/npm-global/bin/reputation-service-mcp"],
+      "environment": {
+        "API_KEY": "{env:CHECKPOINT_REPUTATION_SERVICE_API_KEY}"
+      }
+    },
+    "threat-emulation": {
+      "type": "local",
+      "enabled": false,
+      "command": ["{env:HOME}/.local/npm-global/bin/threat-emulation-mcp"],
+      "environment": {
+        "API_KEY": "{env:CHECKPOINT_THREAT_EMULATION_API_KEY}"
+      }
+    },
     "documentation-tool": {
       "type": "local",
       "enabled": true,

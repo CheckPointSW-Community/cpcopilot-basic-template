@@ -42,6 +42,8 @@ npm install -g \
   @chkp/management-logs-mcp \
   @chkp/threat-prevention-mcp \
   @chkp/https-inspection-mcp \
+  @chkp/reputation-service-mcp \
+  @chkp/threat-emulation-mcp \
   @chkp/documentation-mcp >/dev/null
 
 if [[ -d "${SKILLS_SRC_DIR}" ]]; then

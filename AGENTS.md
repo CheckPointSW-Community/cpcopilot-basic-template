@@ -14,6 +14,8 @@ It is designed for operational analysis and assistant workflows centered on:
 - management logs investigation
 - threat prevention analysis
 - HTTPS inspection analysis
+- reputation lookups
+- threat emulation analysis
 - documentation lookup and change planning
 
 ## What the `checkpoint-copilot` skill does
@@ -46,6 +48,13 @@ Startup command pattern:
 
 The configured Check Point MCP set also includes `spark-management`, which reuses the documentation portal credentials already collected during setup.
 
+Two additional MCP servers are supported as optional integrations:
+
+- `@chkp/reputation-service-mcp`
+- `@chkp/threat-emulation-mcp`
+
+Each optional MCP requires its own API key. If the corresponding key is not provided, that MCP remains disabled in OpenCode settings.
+
 ## How to open the OpenCode Web UI
 
 - Open the forwarded port for `OPENCODE_PORT` (default `4096`) in Codespaces.
@@ -71,6 +80,8 @@ Provide these via Codespaces secrets:
 - `CHECKPOINT_PASSWORD` (used for on-premises management when `CHECKPOINT_API_KEY` is blank)
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
+- `CHECKPOINT_REPUTATION_SERVICE_API_KEY` (optional; enables the Reputation Service MCP)
+- `CHECKPOINT_THREAT_EMULATION_API_KEY` (optional; enables the Threat Emulation MCP)
 - `OPENCODE_SERVER_USERNAME` (defaults to `opencode` during guided setup)
 - `OPENCODE_SERVER_PASSWORD` (defaults to blank during guided setup, which disables OpenCode Web UI auth)
 
@@ -88,9 +99,11 @@ On start, `scripts/first-run-checkpoint-setup.sh`:
 6. defaults the Check Point username suggestion to `admin`
 7. defaults the OpenCode username to `opencode`
 8. defaults the Check Point password to `demo123`, and leaves the OpenCode password blank to disable Web UI auth unless explicitly set
-9. writes user-scoped runtime values under `~/.config/opencode/checkpoint-secrets.env`
-10. updates global OpenCode config (`~/.config/opencode/opencode.json`) without duplicating MCP entries
-11. prints a **redacted** setup summary
+9. offers optional prompts for `CHECKPOINT_REPUTATION_SERVICE_API_KEY` and `CHECKPOINT_THREAT_EMULATION_API_KEY`
+10. disables each optional MCP in OpenCode config when its key is missing
+11. writes user-scoped runtime values under `~/.config/opencode/checkpoint-secrets.env`
+12. updates global OpenCode config (`~/.config/opencode/opencode.json`) without duplicating MCP entries
+13. prints a **redacted** setup summary
 
 If startup is non-interactive and values are missing, run manually:
 
@@ -141,6 +154,17 @@ For best results, include:
 ### HTTPS inspection troubleshooting
 
 - "Find HTTPS inspection exclusions that may weaken certificate validation and explain operational impact."
+
+### Reputation lookups
+
+- "Check the reputation of gmil.com and explain whether it looks suspicious."
+- "Check the reputation of IP 103.243.240.249 and summarize the risk."
+- "Check the reputation of this SHA-256 hash and tell me what is known about it."
+
+### Threat emulation
+
+- "Analyze this suspicious file with Threat Emulation and summarize the verdict."
+- "Use the threat-emulation MCP to scan a suspicious attachment and explain the result."
 
 ### Documentation lookup
 

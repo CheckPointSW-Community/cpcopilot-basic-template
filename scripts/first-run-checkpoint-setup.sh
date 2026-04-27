@@ -19,7 +19,8 @@ mkdir -p "${OPENCODE_CONFIG_DIR}" "${HOME}/.local/state/checkpoint-copilot"
 
 BASE_CONFIG_JSON=""
 MERGED_JSON=""
-trap 'rm -f "${BASE_CONFIG_JSON}" "${MERGED_JSON}"' EXIT
+DYNAMIC_MCP_FRAGMENT_JSON=""
+trap 'rm -f "${BASE_CONFIG_JSON}" "${MERGED_JSON}" "${DYNAMIC_MCP_FRAGMENT_JSON}"' EXIT
 
 if [[ -f "${USER_ENV_FILE}" ]]; then
   set -a
@@ -35,6 +36,8 @@ CHECKPOINT_USERNAME="${CHECKPOINT_USERNAME:-}"
 CHECKPOINT_PASSWORD="${CHECKPOINT_PASSWORD:-}"
 CHECKPOINT_DOC_CLIENT_ID="${CHECKPOINT_DOC_CLIENT_ID:-}"
 CHECKPOINT_DOC_SECRET_KEY="${CHECKPOINT_DOC_SECRET_KEY:-}"
+CHECKPOINT_REPUTATION_SERVICE_API_KEY="${CHECKPOINT_REPUTATION_SERVICE_API_KEY:-}"
+CHECKPOINT_THREAT_EMULATION_API_KEY="${CHECKPOINT_THREAT_EMULATION_API_KEY:-}"
 CHECKPOINT_MGMT_PORT="${CHECKPOINT_MGMT_PORT:-}"
 CHECKPOINT_DOC_REGION="${CHECKPOINT_DOC_REGION:-}"
 CHECKPOINT_DOC_AUTH_URL="${CHECKPOINT_DOC_AUTH_URL:-}"
@@ -219,6 +222,44 @@ prompt_optional_secret() {
   printf -v "${var_name}" '%s' "${input_value}"
 }
 
+prompt_optional_secret_with_disable() {
+  local var_name="$1"
+  local prompt_text="$2"
+
+  local current_value="${!var_name:-}"
+
+  if [[ "${is_interactive}" != "true" ]]; then
+    return
+  fi
+
+  if [[ -z "${current_value}" ]]; then
+    prompt_optional_secret "${var_name}" "${prompt_text}"
+    return
+  fi
+
+  local action=""
+  read -r -p "${prompt_text} [K=keep, U=update, D=disable] " action
+  action="${action:-K}"
+  action="${action^^}"
+
+  case "${action}" in
+    K)
+      return
+      ;;
+    D)
+      printf -v "${var_name}" '%s' ""
+      ;;
+    U)
+      local input_value=""
+      read_masked_secret "${prompt_text}" input_value
+      printf -v "${var_name}" '%s' "${input_value}"
+      ;;
+    *)
+      echo "[setup] Unrecognized choice; keeping existing value for ${var_name}."
+      ;;
+  esac
+}
+
 write_env_line() {
   local key="$1"
   local value="$2"
@@ -267,6 +308,8 @@ if [[ -n "${CHECKPOINT_DOC_AUTH_URL}" ]]; then
 else
   prompt_if_missing "CHECKPOINT_DOC_AUTH_URL" "Optional documentation AUTH_URL (press Enter to skip):"
 fi
+prompt_optional_secret_with_disable "CHECKPOINT_REPUTATION_SERVICE_API_KEY" "Optional Reputation Service MCP API key"
+prompt_optional_secret_with_disable "CHECKPOINT_THREAT_EMULATION_API_KEY" "Optional Threat Emulation MCP API key"
 
 prompt_with_default "OPENCODE_SERVER_USERNAME" "OpenCode web user username" "${DEFAULT_OPENCODE_USERNAME}"
 if [[ -n "${OPENCODE_SERVER_PASSWORD}" ]]; then
@@ -294,6 +337,8 @@ write_env_line "CHECKPOINT_PASSWORD" "${CHECKPOINT_PASSWORD}"
 write_env_line "CHECKPOINT_MGMT_PORT" "${CHECKPOINT_MGMT_PORT}"
 write_env_line "CHECKPOINT_DOC_CLIENT_ID" "${CHECKPOINT_DOC_CLIENT_ID}"
 write_env_line "CHECKPOINT_DOC_SECRET_KEY" "${CHECKPOINT_DOC_SECRET_KEY}"
+write_env_line "CHECKPOINT_REPUTATION_SERVICE_API_KEY" "${CHECKPOINT_REPUTATION_SERVICE_API_KEY}"
+write_env_line "CHECKPOINT_THREAT_EMULATION_API_KEY" "${CHECKPOINT_THREAT_EMULATION_API_KEY}"
 write_env_line "CHECKPOINT_DOC_REGION" "${CHECKPOINT_DOC_REGION}"
 write_env_line "CHECKPOINT_DOC_AUTH_URL" "${CHECKPOINT_DOC_AUTH_URL}"
 write_env_line "OPENCODE_SERVER_USERNAME" "${OPENCODE_SERVER_USERNAME}"
@@ -315,6 +360,15 @@ cat > "${BASE_CONFIG_JSON}" <<EOF
 }
 EOF
 
+DYNAMIC_MCP_FRAGMENT_JSON="$(mktemp)"
+jq \
+  --arg reputation_key "${CHECKPOINT_REPUTATION_SERVICE_API_KEY}" \
+  --arg threat_emulation_key "${CHECKPOINT_THREAT_EMULATION_API_KEY}" \
+  '
+  .mcp["reputation-service"].enabled = ($reputation_key != "") |
+  .mcp["threat-emulation"].enabled = ($threat_emulation_key != "")
+  ' "${MCP_FRAGMENT_FILE}" > "${DYNAMIC_MCP_FRAGMENT_JSON}"
+
 MERGED_JSON="$(mktemp)"
 if [[ -f "${OPENCODE_CONFIG_FILE}" ]] && jq empty "${OPENCODE_CONFIG_FILE}" >/dev/null 2>&1; then
   # Merge existing config with base config changes (port/hostname), then
@@ -322,12 +376,12 @@ if [[ -f "${OPENCODE_CONFIG_FILE}" ]] && jq empty "${OPENCODE_CONFIG_FILE}" >/de
   # Using `+` (not `*`) for the mcp section avoids jq's recursive object
   # merge, which would blend old stale MCP entries with new ones rather
   # than replacing them cleanly.
-  jq -s '(.[0] * .[1]) + {"mcp": .[2].mcp}' "${OPENCODE_CONFIG_FILE}" "${BASE_CONFIG_JSON}" "${MCP_FRAGMENT_FILE}" > "${MERGED_JSON}"
+  jq -s '(.[0] * .[1]) + {"mcp": .[2].mcp}' "${OPENCODE_CONFIG_FILE}" "${BASE_CONFIG_JSON}" "${DYNAMIC_MCP_FRAGMENT_JSON}" > "${MERGED_JSON}"
 else
   if [[ -f "${OPENCODE_CONFIG_FILE}" ]]; then
     cp "${OPENCODE_CONFIG_FILE}" "${OPENCODE_CONFIG_FILE}.bak.invalid"
   fi
-  jq -s '.[0] + {"mcp": .[1].mcp}' "${BASE_CONFIG_JSON}" "${MCP_FRAGMENT_FILE}" > "${MERGED_JSON}"
+  jq -s '.[0] + {"mcp": .[1].mcp}' "${BASE_CONFIG_JSON}" "${DYNAMIC_MCP_FRAGMENT_JSON}" > "${MERGED_JSON}"
 fi
 
 mv "${MERGED_JSON}" "${OPENCODE_CONFIG_FILE}"
@@ -383,6 +437,10 @@ echo "Management username     : $( [[ -n "${CHECKPOINT_MGMT_URL}" ]] && echo "<n
 echo "Management password     : $( [[ -n "${CHECKPOINT_MGMT_URL}" ]] && echo "<not used>" || redact "${CHECKPOINT_PASSWORD}" )"
 echo "Doc CLIENT_ID           : $(redact "${CHECKPOINT_DOC_CLIENT_ID}")"
 echo "Doc SECRET_KEY          : $(redact "${CHECKPOINT_DOC_SECRET_KEY}")"
+echo "Reputation API key      : $(redact "${CHECKPOINT_REPUTATION_SERVICE_API_KEY}")"
+echo "Reputation MCP          : $( [[ -n "${CHECKPOINT_REPUTATION_SERVICE_API_KEY}" ]] && echo "enabled" || echo "disabled" )"
+echo "Threat Emulation key    : $(redact "${CHECKPOINT_THREAT_EMULATION_API_KEY}")"
+echo "Threat Emulation MCP    : $( [[ -n "${CHECKPOINT_THREAT_EMULATION_API_KEY}" ]] && echo "enabled" || echo "disabled" )"
 echo "Doc REGION              : ${CHECKPOINT_DOC_REGION:-<missing>}"
 echo "Doc AUTH_URL            : $(redact "${CHECKPOINT_DOC_AUTH_URL}")"
 echo "OpenCode auth           : $( [[ -n "${OPENCODE_SERVER_PASSWORD}" ]] && echo "enabled" || echo "disabled" )"

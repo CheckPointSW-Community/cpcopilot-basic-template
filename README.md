@@ -39,6 +39,8 @@ You will also need to create a free service account for the Check Point document
 
 Those same documentation portal credentials are also used by the Spark Management MCP server, so Spark support does not require any additional setup.
 
+If you also want to enable the optional Reputation Service or Threat Emulation MCP servers, each requires its own API key. These optional MCPs stay installed but disabled unless you provide the corresponding key during setup or through Codespaces secrets.
+
 1. Navigate to https://portal.checkpoint.com/ and log in with your account.
 2. Select an account/tenant where you are an administrator.
 3. Click the cog-wheel settings icon in the middle of the top bar.
@@ -82,6 +84,11 @@ Collect the required values first.
 - `CHECKPOINT_DOC_CLIENT_ID`
 - `CHECKPOINT_DOC_SECRET_KEY`
 
+Optional MCP-specific values:
+
+- `CHECKPOINT_REPUTATION_SERVICE_API_KEY` to enable `@chkp/reputation-service-mcp`
+- `CHECKPOINT_THREAT_EMULATION_API_KEY` to enable `@chkp/threat-emulation-mcp`
+
 Optional values if you need to override defaults:
 
 - `CHECKPOINT_MGMT_PORT` (default `443`, on-premises only)
@@ -117,6 +124,10 @@ Outside Codespaces, the startup scripts prefer the machine's local network IP an
 
 - In guided setup, the first management prompt accepts either an on-premises DNS/IP value or a Smart-1 Cloud URL.
 - If a Smart-1 Cloud URL is detected, setup requires `CHECKPOINT_API_KEY` and skips the on-premises username/password and port prompts.
+- Guided setup also offers optional prompts for:
+  - `CHECKPOINT_REPUTATION_SERVICE_API_KEY`
+  - `CHECKPOINT_THREAT_EMULATION_API_KEY`
+- If either optional key is omitted, the corresponding MCP stays disabled in OpenCode config.
 - Example Smart-1 Cloud URL: `https://cloudinfra-gw-us.portal.checkpoint.com/your-tenant-id/web_api`
 
 ## What this repository includes
@@ -129,6 +140,8 @@ Outside Codespaces, the startup scripts prefer the machine's local network IP an
   - `@chkp/management-logs-mcp`
   - `@chkp/threat-prevention-mcp`
   - `@chkp/https-inspection-mcp`
+  - `@chkp/reputation-service-mcp` (optional, enabled only when `CHECKPOINT_REPUTATION_SERVICE_API_KEY` is set)
+  - `@chkp/threat-emulation-mcp` (optional, enabled only when `CHECKPOINT_THREAT_EMULATION_API_KEY` is set)
   - `@chkp/documentation-mcp`
 - default primary agent: `CheckPoint-copilot`
 - default model: `opencode/big-pickle`

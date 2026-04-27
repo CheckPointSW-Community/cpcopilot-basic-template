@@ -47,6 +47,8 @@ MCP_PATTERNS=(
   "management-logs-mcp"
   "threat-prevention-mcp"
   "https-inspection-mcp"
+  "reputation-service-mcp"
+  "threat-emulation-mcp"
   "documentation-mcp"
 )
 

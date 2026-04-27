@@ -30,6 +30,12 @@
     "CHECKPOINT_DOC_SECRET_KEY": {
       "description": "Secret key for the Check Point documentation MCP"
     },
+    "CHECKPOINT_REPUTATION_SERVICE_API_KEY": {
+      "description": "Optional API key for the Check Point Reputation Service MCP. If omitted, the MCP stays disabled."
+    },
+    "CHECKPOINT_THREAT_EMULATION_API_KEY": {
+      "description": "Optional API key for the Check Point Threat Emulation MCP. If omitted, the MCP stays disabled."
+    },
     "OPENCODE_SERVER_USERNAME": {
       "description": "Username for OpenCode web mode (defaults to opencode if left blank during setup)"
     },

@@ -51,7 +51,7 @@ fi
 check_cmd python3
 check_cmd opencode
 
-for mcp_bin in quantum-management-mcp spark-management-mcp management-logs-mcp threat-prevention-mcp https-inspection-mcp documentation-mcp; do
+for mcp_bin in quantum-management-mcp spark-management-mcp management-logs-mcp threat-prevention-mcp https-inspection-mcp reputation-service-mcp threat-emulation-mcp documentation-mcp; do
   if [[ -x "${NPM_GLOBAL_BIN}/${mcp_bin}" ]]; then
     pass "${mcp_bin} is installed locally"
   else
@@ -131,7 +131,7 @@ fi
 
 if [[ -f "${REPO_ROOT}/templates/opencode/checkpoint-mcp-fragment.json" ]]; then
   if [[ "${HAS_JQ}" == "true" ]]; then
-    for srv in management spark-management management-logs threat-prevention https-inspection documentation-tool; do
+    for srv in management spark-management management-logs threat-prevention https-inspection reputation-service threat-emulation documentation-tool; do
       if jq -e --arg s "$srv" '.mcp[$s]' "${REPO_ROOT}/templates/opencode/checkpoint-mcp-fragment.json" >/dev/null 2>&1; then
         pass "MCP entry exists for ${srv}"
       else
@@ -148,14 +148,14 @@ fi
 if [[ "${QUICK_MODE}" == "false" ]]; then
   # Heuristic secret leak checks in env-style files only.
   if command -v git >/dev/null 2>&1 && git -C "${REPO_ROOT}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    if git -C "${REPO_ROOT}" grep -nE '^(CHECKPOINT_API_KEY|CHECKPOINT_PASSWORD|CHECKPOINT_DOC_SECRET_KEY|OPENCODE_SERVER_PASSWORD)=.+$' -- '.env*' ':!.env.example' >/dev/null 2>&1; then
+    if git -C "${REPO_ROOT}" grep -nE '^(CHECKPOINT_API_KEY|CHECKPOINT_PASSWORD|CHECKPOINT_DOC_SECRET_KEY|CHECKPOINT_REPUTATION_SERVICE_API_KEY|CHECKPOINT_THREAT_EMULATION_API_KEY|OPENCODE_SERVER_PASSWORD)=.+$' -- '.env*' ':!.env.example' >/dev/null 2>&1; then
       fail "Potential secret values detected in tracked env files"
     else
       pass "No obvious secret assignments found in tracked env files"
     fi
   else
     if find "${REPO_ROOT}" -maxdepth 2 -type f -name '.env*' ! -name '.env.example' -print0 | \
-      xargs -0 grep -nE '^(CHECKPOINT_API_KEY|CHECKPOINT_PASSWORD|CHECKPOINT_DOC_SECRET_KEY|OPENCODE_SERVER_PASSWORD)=.+$' >/dev/null 2>&1; then
+      xargs -0 grep -nE '^(CHECKPOINT_API_KEY|CHECKPOINT_PASSWORD|CHECKPOINT_DOC_SECRET_KEY|CHECKPOINT_REPUTATION_SERVICE_API_KEY|CHECKPOINT_THREAT_EMULATION_API_KEY|OPENCODE_SERVER_PASSWORD)=.+$' >/dev/null 2>&1; then
       fail "Potential secret values detected in env files"
     else
       pass "No obvious secret assignments found in env files"
