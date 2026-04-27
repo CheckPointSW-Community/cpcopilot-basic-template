@@ -15,6 +15,8 @@ This environment works with:
 
 It starts the OpenCode Web UI, installs the Check Point MCP tools, provides a Check Point-focused agent and skill set, and runs a web server for HTML reports created by OpenCode agents.
 
+[![Watch the demo video](https://img.youtube.com/vi/VMBpYRCLGeo/hqdefault.jpg)](https://youtu.be/VMBpYRCLGeo)
+
 See [EU-AI-SOFTWARE-NOTICE.md](EU-AI-SOFTWARE-NOTICE.md) for practical EU-facing guidance on responsible use, software/AI liability expectations, data handling, and escalation triggers.
 
 
